@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "graph.h"
+#include "hash_table.h"
 
 
 typedef struct stVertex {
     char *nome;
-    Info dados;
+    Info dados; // Quadra: nome, cep, ancx, ancy
     double x, y;
     bool adicionado;
 
@@ -24,7 +26,6 @@ typedef struct stGraph {
     Vertex *vertices; // vetor de vertices
     Lista edges;
     
-    // hash table: nomes -> indice nodes
     // hash table: nomes -> indice subgrafos
 
 } stGraph;
@@ -237,6 +238,45 @@ char* getNodeName(Graph g, Node node) {
 void setNodeInfo(Graph g, Node node, Info info) {
     ((stGraph*)g)->vertices[node]->dados = info;
 }
+
+
+void  getNodeNames(Graph g, Lista nomesNodes) {
+    if(!g || !nomesNodes) return;
+
+    for(int i = 0; i < getMaxNodes(g); i++) {
+        Vertex aux = ((stGraph*)g)->vertices[i];
+
+        insereLista(nomesNodes, aux->nome);
+    }
+    
+}
+
+Node getNode(Graph g, char *nome) {
+    if(!g || !nome) return;
+
+    int nVert = getMaxNodes(g); 
+
+    return hash(nome, nVert);
+}
+
+Node addNode(Graph g, char *nome, Info info) {
+    if(!g || !nome || !info) return;
+
+    Node indice = hash(nome, getMaxNodes(g));
+
+    ((stGraph*)g)->vertices[indice]->adicionado = true;
+
+    strcpy(((stGraph*)g)->vertices[indice]->nome, nome);
+    setNodeInfo(g, indice, info);
+    // coordenadas 
+
+    return indice;
+}
+
+
+
+
+
 
     
 

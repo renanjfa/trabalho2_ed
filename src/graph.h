@@ -37,12 +37,12 @@ typedef void *Info;
   Invocado quando uma aresta é "descoberta"/"percorrida"/"classificada". 
   Tambem informa os tempos de descoberta e finalizacao
  */
-bool (*procEdge)(Graph g, Edge e, int td, int tf, void *extra); 
+typedef bool (*procEdge)(Graph g, Edge e, int td, int tf, void *extra); 
 
 /*
   Invocado quando percurso e' recomecado
  */
-bool (*dfsRestarted)(Graph g, void *extra);
+typedef bool (*dfsRestarted)(Graph g, void *extra);
 
 
 
@@ -184,8 +184,10 @@ void getEdges(Graph g, Lista arestas);
       A busca em profundidade, eventualmente, pode produzir uma floresta.
    newTree e' invocada sempre que o percurso for retomado.
  */  
-//bool dfs(Graph g, Node node, procEdge treeEdge, forwardEdge, returnEdge,
-//	 crossEdge, newTree, void *extra);
+bool dfs(Graph g, Node node, procEdge treeEdge, procEdge forwardEdge, procEdge returnEdge, procEdge crossEdge, dfsRestarted newTree, void *extra);
+   
+   //bool dfs(Graph g, Node node, treeEdge, forwardEdge, returnEdge,
+   //crossEdge, newTree, void *extra);
 
 
 /*
