@@ -13,6 +13,8 @@ typedef struct stRua {
 
 typedef struct stQuadra {
     char *nome;
+    char *corb, *corp;
+    char *sw;
     double ancx, ancy;
     double w, h;
 } stQuadra;
@@ -25,7 +27,7 @@ typedef struct stEndereco {
 
 
 
-Quadra createQuadra(char *nome, double ancx, double ancy, double w, double h) {
+Quadra createQuadra(char *nome, double ancx, double ancy, double w, double h, char *corb, char *corp, char *sw) {
     stQuadra *q = malloc(sizeof(stQuadra));
 
     q->ancx = ancx;
@@ -39,6 +41,27 @@ Quadra createQuadra(char *nome, double ancx, double ancy, double w, double h) {
         exit(1);
     }
     strcpy(q->nome, nome);
+
+    q->corb = (char*)malloc(strlen(corb)+1);
+    if(q->corb == NULL) {
+        printf("Erro na alocação de memória da cor da borda da quadra.");
+        exit(1);
+    }
+    strcpy(q->corb, corb);
+
+    q->corp = (char*)malloc(strlen(corp)+1);
+    if(q->corp == NULL) {
+        printf("Erro na alocação de memória da cor de preenchimento da quadra.");
+        exit(1);
+    }
+    strcpy(q->corp, corp);
+
+    q->sw = (char*)malloc(strlen(sw)+1);
+    if(q->sw == NULL) {
+        printf("Erro na alocação de memória da largura da borda da quadra.");
+        exit(1);
+    }
+    strcpy(q->sw, sw);
 
     return ((stQuadra*)q);
 }
@@ -63,6 +86,18 @@ double getHQuadra(Quadra q) {
     return ((stQuadra*)q)->h;
 }
 
+char* getCorbQuadra(Quadra q) {
+    return ((stQuadra*)q)->corb;  
+}
+
+char* getCorpQuadra(Quadra q) {
+    return ((stQuadra*)q)->corp;  
+}
+
+char* getSWQuadra(Quadra q) {
+    return ((stQuadra*)q)->sw;  
+}
+
 void setNomeQuadra(Quadra q, char *nome) {
     strcpy(((stQuadra*)q)->nome, nome);
 }
@@ -83,6 +118,17 @@ void setHQuadra(Quadra q, double h) {
     ((stQuadra*)q)->h = h;
 }
 
+void setCorbQuadra(Quadra q, char *corb) {
+    strcpy(((stQuadra*)q)->corb, corb);
+}
+
+void setCorpQuadra(Quadra q, char *corp) {
+    strcpy(((stQuadra*)q)->corp, corp);
+}
+
+void setSWQuadra(Quadra q, char *sw) {
+    strcpy(((stQuadra*)q)->sw, sw);
+}
 
 
 

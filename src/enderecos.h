@@ -9,7 +9,7 @@ typedef void *Endereco;
 
 /* ----- CONSTRUTOR QUADRA ----- */
 
-Quadra createQuadra(char *nome, double ancx, double ancy, double w, double h);
+Quadra createQuadra(char *nome, double ancx, double ancy, double w, double h, char *corb, char *corp, char *sw);
 
 /* ----- METODOS GET QUADRA ----- */
 
@@ -23,6 +23,12 @@ double getWQuadra(Quadra q);
 
 double getHQuadra(Quadra q);
 
+char* getCorbQuadra(Quadra q);
+
+char* getCorpQuadra(Quadra q);
+
+char* getSWQuadra(Quadra q);
+
 
 /* ----- METODOS SET QUADRA ----- */
 
@@ -35,6 +41,12 @@ void setYQuadra(Quadra q, double y);
 void setWQuadra(Quadra q, double w);
 
 void setHQuadra(Quadra q, double h);
+
+void setCorbQuadra(Quadra q, char *corb);
+
+void setCorpQuadra(Quadra q, char *corp);
+
+void setSWQuadra(Quadra q, char *sw);
 
 
 
