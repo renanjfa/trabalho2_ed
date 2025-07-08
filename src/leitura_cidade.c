@@ -41,18 +41,16 @@ int quantidadeQuadras(FILE *arqcidade) {
 }
 
 
-HashTable LeituraCompletaCidade(FILE **svg1, FILE *arqcidade) {
+HashTable LeituraCompletaCidade(FILE **svg1, FILE *arqcidade, HashTable ht) {
     double ancx, ancy, w, h;
     char corp[300], corb[300], nome[300], sw[300], comando[10];
 
-    int qntQuadras = quantidadeQuadras(arqcidade);
-    rewind(arqcidade);
-    HashTable ht = createHashTable(qntQuadras);
+    Estilo ts = criarEstilo("sans", "b", "12px");
 
     char linha[MAX_SIZE];
     char aux[MAX_SIZE];
 
-    while(leituraLinha(arqcidade, linha, 1000)) {
+    while(leituraLinha(arqcidade, linha, MAX_SIZE)) {
 
         aux[0] = '\0';
         comando[0] = '\0';
@@ -70,15 +68,15 @@ HashTable LeituraCompletaCidade(FILE **svg1, FILE *arqcidade) {
 
             insertHashTable(ht, nome, q);
 
-            insertQuadraSVG(svg1, q);
-            // inserir text no svg (nome da quadra);
+            insertQuadraSVG(*svg1, q);
+            insertTextSVG(*svg1, criarTexto(27, ancx+7, ancy+12, "black", "black", 'i', nome, ts));
         }
     }
 
     return ht;
 }
 
-void ProcessaCidade(const char *pathcidade, const char *dirsaida, const char *nomecidade) {
+HashTable ProcessaCidade(const char *pathcidade, const char *dirsaida, const char *nomecidade) {
     FILE *arqcidade = fopen(pathcidade, "r");
     printf("Diretorio do arquivo geo: %s\n", pathcidade);
     if (arqcidade == NULL) {
@@ -101,10 +99,16 @@ void ProcessaCidade(const char *pathcidade, const char *dirsaida, const char *no
 
     printSVGCabecalho(svg1);
 
-    LeituraCompletaCidade(&svg1, arqcidade);
+    int qntQuadras = quantidadeQuadras(arqcidade);
+    rewind(arqcidade);
+    HashTable ht = createHashTable(qntQuadras);
+
+    ht = LeituraCompletaCidade(&svg1, arqcidade, ht);
 
     fecharSVG(svg1);
 
     fclose(arqcidade);
+
+    return ht;
 }
 
