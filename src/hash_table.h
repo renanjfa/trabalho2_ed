@@ -7,9 +7,12 @@ typedef void *ConteudoHashNode;
 
 HashTable createHashTable(int tamanho);
 
-unsigned int hash(char *string, int modulo);
+void insertHashTable(HashTable tabela, char *key, ConteudoHashNode valor);
 
-void insertHashTable(HashTable ht, char* key, ConteudoHashNode content);
+ConteudoHashNode buscaHashTable(HashTable tabela, char *key);
 
+void destroiHashTable(HashTable tabela, void (*liberaValor)(ConteudoHashNode));
+
+int getOrCreateNode(HashTable tabela, char *key, int *proxId);
 
 #endif
