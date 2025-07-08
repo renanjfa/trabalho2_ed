@@ -5,6 +5,7 @@
 
 #include "leitura_cidade.h"
 #include "enderecos.h"
+#include "svg.h"
 
 #define MAX_SIZE 10000
 
@@ -17,10 +18,36 @@ bool leituraLinha(FILE* arq, char *linha, int max_size) {
     }
 }
 
+int quantidadeQuadras(FILE *arqcidade) {
 
-void LeituraCompletaCidade(FILE **svg1, FILE *arqcidade) {
+    char comando[10];
+    char linha[MAX_SIZE];
+    char aux[MAX_SIZE];
+
+    int qntQuadras = 0;
+
+    while(leituraLinha(arqcidade, linha, 1000)) {
+
+        aux[0] = '\0';
+        comando[0] = '\0';
+        strcpy(aux, linha);
+        sscanf(aux, "%s", comando);
+
+        if(strcmp(comando, "q") == 0)
+            qntQuadras++;
+    }
+
+    return qntQuadras;
+}
+
+
+HashTable LeituraCompletaCidade(FILE **svg1, FILE *arqcidade) {
     double ancx, ancy, w, h;
     char corp[300], corb[300], nome[300], sw[300], comando[10];
+
+    int qntQuadras = quantidadeQuadras(arqcidade);
+    rewind(arqcidade);
+    HashTable ht = createHashTable(qntQuadras);
 
     char linha[MAX_SIZE];
     char aux[MAX_SIZE];
@@ -38,12 +65,17 @@ void LeituraCompletaCidade(FILE **svg1, FILE *arqcidade) {
 
         else if(strcmp(comando, "q") == 0) {
             sscanf(aux, "%s %s %lf %lf %lf %lf", comando, nome, &ancx, &ancy, &w, &h);
-            // inserir em hash<nome, Quadra> ou em uma lista
-            // inserir no svg1
-        }
+            
+            Quadra q = createQuadra(nome, ancx, ancy, w, h, corb, corp, sw);
 
+            insertHashTable(ht, nome, q);
+
+            insertQuadraSVG(svg1, q);
+            // inserir text no svg (nome da quadra);
+        }
     }
 
+    return ht;
 }
 
 void ProcessaCidade(const char *pathcidade, const char *dirsaida, const char *nomecidade) {
@@ -67,13 +99,12 @@ void ProcessaCidade(const char *pathcidade, const char *dirsaida, const char *no
         exit(1);
     }
 
-    fprintf(svg1, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-    fprintf(svg1, "<svg width=\"2000\" height=\"2000\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n");
+    printSVGCabecalho(svg1);
 
     LeituraCompletaCidade(&svg1, arqcidade);
 
-    fprintf(svg1, "</svg>\n");
+    fecharSVG(svg1);
+
     fclose(arqcidade);
-    fclose(svg1);
 }
 

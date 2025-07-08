@@ -4,9 +4,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "hash_table.h"
 
-
-void LeituraCompletaCidade(FILE **svg1, FILE *arqcidade);
+HashTable LeituraCompletaCidade(FILE **svg1, FILE *arqcidade);
 
 void ProcessaCidade(const char *pathcidade, const char *dirsaida, const char *nomecidade);
 
