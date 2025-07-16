@@ -4,6 +4,7 @@
 typedef void *Rua;  // nome, ldir, lesq, comp, velocidade
 typedef void *Quadra;   // nome, cep (nome, direcao, ), ancora x, y
 typedef void *Endereco;
+typedef void *Esquina;
 // colocar as quadras em uma hashtable para consulta posterior
 
 
@@ -28,7 +29,6 @@ char* getCorbQuadra(Quadra q);
 char* getCorpQuadra(Quadra q);
 
 char* getSWQuadra(Quadra q);
-
 
 /* ----- METODOS SET QUADRA ----- */
 
@@ -99,6 +99,36 @@ void setLESQRua(Rua r, char *lesq);
 void setCompRua(Rua r, double comp);
 
 void setVelocidadeRua(Rua r, double veloc);
+
+
+
+
+/* ----- CONSTRUTOR ESQUINA ----- */
+
+Esquina createEsquina(char *nome, double x, double y);
+
+
+/* ----- METODOSO GET ESQUINA ----- */
+
+char* getNomeEsquina(Esquina eq);
+
+double getXEsquina(Esquina eq);
+
+double getYEsquina(Esquina eq);
+
+
+/* ----- METODOS SET ESQUINA ----- */
+
+void setNomeEsquina(Esquina eq, char *nome);
+
+void setXEsquina(Esquina eq, double x);
+
+void setYEsquina(Esquina eq, double y);
+
+
+/* ----- METODOS EXTRAS AUXILIARES ESQUINA ----- */
+
+void calculaBoundingBoxEsquina(Esquina eq, double *x, double *y, double *w, double *h);
 
 
 #endif

@@ -27,6 +27,11 @@ typedef struct stEndereco {
 } stEndereco;
 
 
+typedef struct stEsquina {
+    char *nome;
+    double x, y;
+} stEsquina;
+
 
 Quadra createQuadra(char *nome, double ancx, double ancy, double w, double h, char *corb, char *corp, char *sw) {
     stQuadra *q = malloc(sizeof(stQuadra));
@@ -250,3 +255,55 @@ void setVelocidadeRua(Rua r, double veloc) {
     ((stRua*)r)->velocidade = veloc;
 }
 
+
+
+
+Esquina createEsquina(char *nome, double x, double y) {
+    stEsquina *e = malloc(sizeof(stEsquina));
+
+    e->x = x;
+    e->y = y;
+
+    e->nome = (char*)malloc(strlen(nome)+1);
+    if(e->nome == NULL) {
+        printf("Erro na alocacao do nome da Esquina.\n");
+        exit(1);
+    }
+    strcpy(e->nome, nome);
+
+    return ((stEsquina*)e);
+}
+
+char* getNomeEsquina(Esquina eq) {
+    return ((stEsquina*)eq)->nome;
+}
+
+double getXEsquina(Esquina eq) {
+    return ((stEsquina*)eq)->x;
+}
+
+double getYEsquina(Esquina eq) {
+    return ((stEsquina*)eq)->y;
+}
+
+
+void setNomeEsquina(Esquina eq, char *nome) {
+    strcpy(((stEsquina*)eq)->nome, nome);
+}
+
+void setXEsquina(Esquina eq, double x) {
+    ((stEsquina*)eq)->x = x;
+}
+
+void setYEsquina(Esquina eq, double y) {
+    ((stEsquina*)eq)->y = y;
+}
+
+
+
+void calculaBoundingBoxEsquina(Esquina eq, double *x, double *y, double *w, double *h) {
+    *x = getXEsquina(eq);
+    *y = getYEsquina(eq);
+    *w = 0;
+    *h = 0;
+}
