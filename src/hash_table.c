@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "hash_table.h"
 
@@ -40,7 +41,7 @@ HashTable createHashTable(int tamanho) {
 void insertHashTable(HashTable tabela, char *key, ConteudoHashNode valor) {
     stHashTable *ht = (stHashTable*)tabela;
 
-    int idx = hash_function(key, ht->tamanho);
+    int idx = hash(key, ht->tamanho);
 
     stHashNode novo = malloc(sizeof(stHN));
     novo->key = strdup(key);
@@ -52,7 +53,7 @@ void insertHashTable(HashTable tabela, char *key, ConteudoHashNode valor) {
 ConteudoHashNode buscaHashTable(HashTable tabela, char *key) {
     stHashTable *ht = (stHashTable *)tabela;
 
-    int idx = hash_function(key, ht->tamanho);
+    int idx = hash(key, ht->tamanho);
 
     stHashNode atual = ht->buckets[idx];
     while (atual) {
@@ -83,7 +84,7 @@ void destroiHashTable(HashTable tabela, void (*liberaValor)(ConteudoHashNode)) {
 
 
 int getOrCreateNode(HashTable tabela, char *key, int *proxId) {
-    ConteudoHashNode resultado = buscaHash(tabela, key);
+    ConteudoHashNode resultado = buscaHashTable(tabela, key);
 
     if (resultado != NULL)
         return (int)(long)resultado;

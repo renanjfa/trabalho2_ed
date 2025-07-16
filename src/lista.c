@@ -59,7 +59,7 @@ int getTamanhoLista(Lista l) {
 void copiaListas(Lista copia, Lista fonte) {
     Celula aux = ((stLista*)fonte)->inicio;
     while(aux != NULL) {
-        inserirLista(copia, ((stCelula*)aux)->chave);
+        insereLista(copia, ((stCelula*)aux)->chave);
         aux = ((stCelula*)aux)->prox;
     }
 }
