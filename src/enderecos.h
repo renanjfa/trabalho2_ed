@@ -3,7 +3,6 @@
 
 typedef void *Rua;  // nome, ldir, lesq, comp, velocidade
 typedef void *Quadra;   // nome, cep (nome, direcao, ), ancora x, y
-typedef void *Endereco;
 typedef void *Esquina;
 // colocar as quadras em uma hashtable para consulta posterior
 
@@ -47,28 +46,6 @@ void setCorbQuadra(Quadra q, char *corb);
 void setCorpQuadra(Quadra q, char *corp);
 
 void setSWQuadra(Quadra q, char *sw);
-
-
-
-/* ----- CONSTRUTOR ENDERECO ----- */
-
-Endereco createEndereco(char *nomeQuadra, char setor, int numero);
-
-/* ----- METODOS GET ENDERECO ----- */
-
-char* getNomeQuadraEndereco(Endereco e);
-
-char getSetorEndereco(Endereco e);
-
-int getNumeroEndereco(Endereco e);
-
-/* ----- METODOS SET ENDERECO ----- */
-
-void setNomeQuadraEndereco(Endereco e, char *nome);
-
-void setSetorEndereco(Endereco e, char setor);
-
-void setNumeroEndereco(Endereco e, int num);
 
 
 

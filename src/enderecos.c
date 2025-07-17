@@ -137,54 +137,6 @@ void setSWQuadra(Quadra q, char *sw) {
 }
 
 
-
-
-Endereco createEndereco(char *nomeQuadra, char setor, int numero) {
-    stEndereco *e = malloc(sizeof(stEndereco));
-
-    e->nomeQuadra = (char*)malloc(strlen(nomeQuadra)+1);
-    if(e->nomeQuadra == NULL) {
-        printf("Erro na alocacao do nomeQuadra do Endereco.\n");
-        exit(1);
-    }
-    strcpy(e->nomeQuadra, nomeQuadra);
-
-    e->setor = setor;
-
-    e->numero = numero;
-
-    return ((stEndereco*)e);
-}
-
-char* getNomeQuadraEndereco(Endereco e) {
-    return ((stEndereco*)e)->nomeQuadra;
-}
-
-char getSetorEndereco(Endereco e) {
-    return ((stEndereco*)e)->setor;
-}
-
-int getNumeroEndereco(Endereco e) {
-    return ((stEndereco*)e)->numero;
-}
-
-void setNomeQuadraEndereco(Endereco e, char *nome) {
-    strcpy(((stEndereco*)e)->nomeQuadra, nome);
-}
-
-void setSetorEndereco(Endereco e, char setor) {
-    ((stEndereco*)e)->setor = setor;
-}
-
-void setNumeroEndereco(Endereco e, int num) {
-    ((stEndereco*)e)->numero = num;
-}
-
-
-
-
-
-
 Rua createRua(char *nome, char *lesq, char *ldir, double comprimento, double velocidade) {
     stRua *r = malloc(sizeof(stRua));
 
