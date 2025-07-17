@@ -17,7 +17,7 @@ typedef void *Linha;
 /// @param y2 coordenada y do segundo ponto
 /// @param cor cor da linha
 /// @return retorna a linha
-Linha criarLinha(int i, double x1, double y1, double x2, double y2, char *cor);
+Linha criarLinha(int i, double x1, double y1, double x2, double y2, char *cor, bool pontilhada);
 
 
 
@@ -64,6 +64,11 @@ char* getCorLinha(Linha l);
 /// @param l Linha l
 /// @return retorna a largura do traço (stroke-width)
 double getSWLinha(Linha l);
+
+/// @brief metodo get para verificacao se a linha é pontilhada ou não
+/// @param l Linha l
+/// @return retorna a flag de pontilhado
+bool getPontilhadaLinha(Linha l);
 
 
 

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <stdbool.h>
 #include "string.h"
 #include "linha.h"
 
@@ -9,9 +10,10 @@ typedef struct stLinha {
     double x1, y1, x2, y2;
     char *cor;
     double sw;
+    bool pontilhada;
 } stLinha;
 
-Linha criarLinha(int i, double x1, double y1, double x2, double y2, char *cor) {
+Linha criarLinha(int i, double x1, double y1, double x2, double y2, char *cor, bool pontilhada) {
     stLinha *l = malloc(sizeof(stLinha));
     l->i = i; 
     l->x1 = x1; l->y1 = y1;
@@ -24,6 +26,8 @@ Linha criarLinha(int i, double x1, double y1, double x2, double y2, char *cor) {
         exit(1);
     }
     strcpy(l->cor, cor);
+    
+    l->pontilhada = pontilhada;
 
     return ((stLinha*)l);
 }
@@ -51,6 +55,11 @@ double getY2Linha(Linha l){
 char* getCorLinha(Linha l) {
     return ((stLinha*)l)->cor;
 }
+
+bool getPontilhadaLinha(Linha l) {
+    return ((stLinha*)l)->pontilhada;
+}
+
 
 double calculaAreaL(Linha l) {
     return 10*sqrt(pow( ((stLinha*)l)->x1 - ((stLinha*)l)->x2, 2) + pow( ((stLinha*)l)->y1 - ((stLinha*)l)->y2, 2)); 

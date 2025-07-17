@@ -6,11 +6,11 @@ typedef void *Percurso;
 typedef void *Coordenadas;
 
 #include "lista.h"
-
+#include "hash_table.h"
 
 /* ----- CONSTRUTOR ENDERECO ----- */
 
-Endereco createEndereco(char *nomeQuadra, char setor, int numero);
+Endereco createEndereco(char *nomeQuadra, char setor, int numero, HashTable quadras);
 
 /* ----- METODOS GET ENDERECO ----- */
 
@@ -20,6 +20,10 @@ char getSetorEndereco(Endereco e);
 
 int getNumeroEndereco(Endereco e);
 
+double getXEndereco(Endereco e);
+
+double getYEndereco(Endereco e);
+
 /* ----- METODOS SET ENDERECO ----- */
 
 void setNomeQuadraEndereco(Endereco e, char *nome);
@@ -27,6 +31,10 @@ void setNomeQuadraEndereco(Endereco e, char *nome);
 void setSetorEndereco(Endereco e, char setor);
 
 void setNumeroEndereco(Endereco e, int num);
+
+void setXEndereco(Endereco e, double x);
+
+void setYEndereco(Endereco e, double y);
 
 
 
