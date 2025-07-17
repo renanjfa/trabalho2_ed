@@ -9,6 +9,8 @@
 #include "linha.h"
 #include "retangulo.h"
 #include "texto.h"
+#include "lista.h"
+#include "registradores.h"
 
 
 void printSVGCabecalho(FILE *svg);
@@ -24,5 +26,10 @@ void insertRectSVG(FILE *svg, Retangulo r);
 void insertLineSVG(FILE *svg, Linha l);
 
 void insertTextSVG(FILE *svg, Texto t);
+
+void printPathSVG(FILE *svg, Percurso p, char *nomepath);
+
+void printAnimationSVG(FILE *svg, char *idpath);
+
 
 #endif
