@@ -1,7 +1,9 @@
-#include "stdio.h"
-#include "stdlib.h"
-#include "string.h"
-#include "strings.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+
+#include "tratar_strings.h"
 
 char* trataDirEntrada(const char* str) {
     
@@ -122,4 +124,12 @@ char* concatenaNomeQry(const char* nomegeo, const char* nomeqry) {
     strcat(concatnome, "-");
     strcat(concatnome, nomeqry);
     return concatnome;
+}
+
+bool leituraLinha(FILE* arq, char *linha, int max_size) {
+    if (fgets(linha, max_size, arq) != NULL) {
+        return true;
+    } else {
+        return false;
+    }
 }

@@ -6,17 +6,10 @@
 #include "leitura_cidade.h"
 #include "enderecos.h"
 #include "svg.h"
+#include "tratar_strings.h"
 
 #define MAX_SIZE 10000
 
-
-bool leituraLinha(FILE* arq, char *linha, int max_size) {
-    if (fgets(linha, max_size, arq) != NULL) {
-        return true;
-    } else {
-        return false;
-    }
-}
 
 int quantidadeQuadras(FILE *arqcidade) {
 

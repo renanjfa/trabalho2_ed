@@ -7,20 +7,30 @@
 #include "graph.h"
 #include "smutreap.h"
 #include "svg.h"
+#include "funcoesqry.h"
+#include "tratar_strings.h"
 
 #define MAX_SIZE 10000
 
 
+void inserirQuadrasSVG2(char *key, Quadra q, FILE* svg) {
+    if(!q) return;
+    Estilo ts = criarEstilo("sans", "b", "12px");
 
-bool leituraLinha(FILE* arq, char *linha, int max_size) {
-    if (fgets(linha, max_size, arq) != NULL) {
-        return true;
-    } else {
-        return false;
-    }
+    insertQuadraSVG(svg, q);
+    insertTextSVG(svg, criarTexto(27, getXQuadra(q)+7, getYQuadra(q)+12, "black", "black", 'i', getNomeQuadra(q), ts));
 }
 
-void LeituraCompletaQry(FILE* arqQry, FILE **txt, FILE **svgs2, Graph g, SmuTreap smuVertices, HashTable quadras, HashTable enderecos, HashTable percursos, Lista *arestasN) {
+void printEsquinasSVG(SmuNode n, Info i, double x, double y, FILE* svg) {
+    if(!n || !svg || !i) return;
+
+    Circulo c = criarCirculo(27, x, y, 2, "orange", "orange");
+    insertCircleSVG(svg, c);
+}
+
+
+
+void LeituraCompletaQry(FILE* arqQry, FILE **txt, FILE **svg2, Graph g, SmuTreap smuVertices, HashTable quadras, HashTable enderecos, HashTable percursos, Lista *arestasN) {
     int num, n;
     double x, y, w, h;
     char comando[30], reg[300], cep[300], face, nome[300], np[300], reg1[300], reg2[300], np1[300], np2[300], cmc[300], cmr[300];
@@ -35,17 +45,20 @@ void LeituraCompletaQry(FILE* arqQry, FILE **txt, FILE **svgs2, Graph g, SmuTrea
 
         if(strcmp(comando, "@o?") == 0) {
             sscanf(aux, "%s %s %s %c %d", comando, reg, cep, &face, &num);
-            // registrarEndereco(reg, cep, face, num);
+            fprintf(*txt, "[*] @o? %s %s %c %d\n", reg, cep, face, num);
+            registrarEndereco(*svg2, *txt, enderecos, quadras, reg, cep, face, num);
         }
 
         else if(strcmp(comando, "alag") == 0) {
             sscanf(aux, "%s %d %lf %lf %lf %lf", comando, &n, &x, &y, &w, &h);
-            // alag(n, x, y, w, h);
+            fprintf(*txt, "[*] alag %d %.3lf %.3lf %.3lf %.3lf\n", n, x, y, w, h);
+            alag(*svg2, *txt, g, smuVertices, n, x, y, w, h, arestasN);
         }
 
         else if(strcmp(comando, "dren") == 0) {
             sscanf(aux, "%s %d", comando, &n);
-            // dren(n);
+            fprintf(*txt, "[*] dren %d\n", n);
+            dren(*txt, g, n, arestasN);
         }
 
         else if(strcmp(comando, "sg") == 0) {
@@ -65,7 +78,7 @@ void LeituraCompletaQry(FILE* arqQry, FILE **txt, FILE **svgs2, Graph g, SmuTrea
 
         else if(strcmp(comando, "shw") == 0) {
             sscanf(aux, "%s %s %s %s", comando, np, cmc, cmr);
-            // shw(np, cmc, cmr);
+            shw(*svg2, np, cmc, cmr, percursos);
         }
     }
 }
@@ -117,6 +130,9 @@ void ProcessaQry(const char *pathqry, const char *dirSaida, const char *nomearqs
         fclose(stxt);
         exit(1);
     }
+
+    percorrerHashTable(quadras, inserirQuadrasSVG2, &ssvg2);
+    visitaProfundidadeSmuT(smuVertices, printEsquinasSVG, &ssvg2);
 
     LeituraCompletaQry(arqqry, &stxt, &ssvg2, g, smuVertices, quadras, enderecos, percursos, arestasN);
 

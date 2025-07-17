@@ -7,17 +7,12 @@
 #include "graph.h"
 #include "enderecos.h"
 #include "svg.h"
+#include "tratar_strings.h"
 
 #define MAX_SIZE 10000
 
 
-bool leituraLinha(FILE* arq, char *linha, int max_size) {
-    if (fgets(linha, max_size, arq) != NULL) {
-        return true;
-    } else {
-        return false;
-    }
-}
+
 
 Graph LeituraCompletaVia(FILE *arqvia, SmuTreap t) {
     double x, y, comp, veloc;
