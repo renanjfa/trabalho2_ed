@@ -45,11 +45,15 @@ typedef bool (*procEdge)(Graph g, Edge e, int td, int tf, void *extra);
 typedef bool (*dfsRestarted)(Graph g, void *extra);
 
 
+typedef double (*FuncCusto)(Info dados);
+
+
 
 /*
     Cria um grafo com, no maximo, "nVert" vertices.
  */
-Graph createGraph(int nVert, bool directed);
+Graph createGraph(int nVert, bool directed, char *nome);
+// perguntar para o professor se precisa do directed
 
 
 /*
@@ -178,6 +182,8 @@ void  getNodeNames(Graph g, Lista nomesNodes);
 void getEdges(Graph g, Lista arestas);
 
 
+double* dijkstraA(Graph g, Node to, Node from, int **predecessores, FuncCusto calcularCusto);
+
 /*
    Faz percurso em profundidade sobre  g, a partir do no' node, classificando 
    as arestas do grafo, invocando a respectiva funcao.
@@ -194,7 +200,7 @@ bool dfs(Graph g, Node node, procEdge treeEdge, procEdge forwardEdge, procEdge r
    Percorre o grafo g em largura, a partir do no' node. discoverNode e' usada
    para a aresta (x,y) usada para "descobrir" o y.
  */
-//bool bfs(Graph g, Node node, discoverNode, void *extra);
+bool bfs(Graph g, Node node, procEdge discoverNode, void *extra);
 
 
 /*
@@ -209,9 +215,11 @@ void killDG(Graph g);
 /*
     Calcula o subgrafo composto  pelos vertices cujos nomes estao no vetor nomesVerts
 (nVerts e' o tamanho deste vetor). Caso comAresta seja true calcula o subgrafo 
-induzido pelos vertices em nomesVers
+induzido pelos vertices em nomesVerts
  */
-void  createSubgraphDG(Graph g, char *nomeSubgrafo, char *nomesVerts[], int nVert, bool comArestas);
+void createSubgraphDG(Graph g, char *nomeSubgrafo, char *nomesVerts[], int nVert, bool comArestas);
+// interno ao grafo g
+
 
 
 /*
@@ -253,5 +261,7 @@ void getAllEdgesSDG(Graph g, char *nomeSubgrafo, Lista lstEdges);
   Novo grafo.
  */
 Graph produceGraph(Graph g, char *nomeSubgrafo);
+// sai para fora do grafo g, cria um novo grafo baseado nas mesmas informacoes do subgrafo com nomeSubgrafo
+
 
 #endif

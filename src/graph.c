@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <float.h>
 
 #include "graph.h"
 #include "hash_table.h"
@@ -9,7 +10,6 @@
 typedef struct stVertex {
     char *nome;
     Info dados; // Quadra: nome, cep, ancx, ancy
-    double x, y;
     bool adicionado;
 
     Lista adjacentes; // Lista de Edges
@@ -18,30 +18,40 @@ typedef struct stVertex {
 typedef stVertex* Vertex;
 
 typedef struct stGraph {
+    char *nome;
     int maxNodes;
     int totalNodes;
     int totalEdges;
     bool directed;
 
-    Vertex *vertices; // vetor de vertices
+    Vertex *vertices; // vetor de vertices[]
     Lista edges;
-    
-    // hash table: nomes -> indice subgrafos
+    Graph *subgrafos;   // vetor de subgrafos[]
+
+    HashTable nomesToNodes;
+    HashTable nomesToSubgraphs;
 
 } stGraph;
 
 typedef struct stEdge {
-
     Node from;
     Node to;
     Info dados; // Informacao Rua: nome, velocidade, comp, ldir, lesq
+    bool habilitado;
 
 } stEdge;
 
 
-Graph createGraph(int nVert, bool directed) {
+Graph createGraph(int nVert, bool directed, char *nome) {
     stGraph *g = malloc(sizeof(stGraph));
-    
+
+    g->nome = (char*)malloc(strlen(nome)+1);
+    if(g->nome == NULL) {
+        printf("Erro na alocacao do nome do grafo.\n");
+        exit(1);
+    }
+    strcpy(g->nome, nome);
+
     g->directed = directed;
     g->maxNodes = nVert;
     g->totalEdges = 0;
@@ -54,9 +64,14 @@ Graph createGraph(int nVert, bool directed) {
         g->vertices[i]->adicionado = false;
         g->vertices[i]->nome = NULL;
         g->vertices[i]->dados = NULL;
-        g->vertices[i]->x = g->vertices[i]->y = 0.0;
     }
 
+    // revisar 
+    g->subgrafos = NULL;
+    
+
+    g->nomesToNodes = createHashTable(nVert);
+    g->nomesToSubgraphs = createHashTable(100);
     g->edges = criaLista();
 
     return ((stGraph*)g);
@@ -118,7 +133,7 @@ void setEdgeInfo(Graph g, Edge e, Info info) {
     ((stEdge*)e)->dados = info;
 }
 
-
+// fazer verificacao se o vertice from ou to existem
 Edge addEdge(Graph g, Node from, Node to, Info info) {
     if(!g || !info) return NULL;
 
@@ -196,7 +211,7 @@ void adjacentNodes(Graph g, Node node, Lista nosAdjacentes) {
         Edge atual = getConteudoCelula(p);
         Node to_atual = getToNode(g, atual);
 
-        insereLista(nosAdjacentes, to_atual);
+        //insereLista(nosAdjacentes, to_atual);
           
     }
 }
@@ -252,38 +267,81 @@ void  getNodeNames(Graph g, Lista nomesNodes) {
 }
 
 Node getNode(Graph g, char *nome) {
-    if(!g || !nome) return;
+    if(!g || !nome) return -1;
 
-    int nVert = getMaxNodes(g); 
+    Node idx = (Node)buscaHashTable(((stGraph*)g)->nomesToNodes, nome);
 
-    return hash(nome, nVert);
+    return idx;
 }
 
 Node addNode(Graph g, char *nome, Info info) {
-    if(!g || !nome || !info) return;
+    if(!g || !nome || !info) return -1;
 
-    Node indice = hash(nome, getMaxNodes(g));
+    int proxID = 0;
+    Node idx = getOrCreateNode( ((stGraph*)g)->nomesToNodes, nome, &proxID);
 
-    ((stGraph*)g)->vertices[indice]->adicionado = true;
+    ((stGraph*)g)->vertices[idx]->adicionado = true;
 
-    strcpy(((stGraph*)g)->vertices[indice]->nome, nome);
-    setNodeInfo(g, indice, info);
-    // coordenadas 
+    ((stGraph*)g)->vertices[idx]->nome = (char*)malloc(strlen(nome)+1);
+    if(((stGraph*)g)->vertices[idx]->nome == NULL) {
+        printf("Erro na alocacao do nome do grafo.\n");
+        exit(1);
+    }
+    strcpy(((stGraph*)g)->vertices[idx]->nome, nome);
 
-    return indice;
+    setNodeInfo(g, idx, info);
+
+    ((stGraph*)g)->totalNodes++;
 }
 
 
 
+// double* dijkstraA(Graph g, Node inicio, Node destino, int **predecessores, FuncCusto calcularCusto) {
+//     int n = getMaxNodes(g);
 
+//     double* dist = malloc(n * sizeof(double));
+//     bool* visitado = calloc(n, sizeof(bool));
+//     *predecessores = malloc(n * sizeof(int));
 
+//     for (int i = 0; i < n; i++) {
+//         dist[i] = DBL_MAX;
+//         (*predecessores)[i] = -1;
+//     }
 
-    
+//     dist[inicio] = 0.0;
 
+//     while (true) {
+//         // menor não visitado
+//         double menor = DBL_MAX;
+//         Node u = -1;
+//         for (int i = 0; i < n; i++) {
+//             if (!visitado[i] && dist[i] < menor) {
+//                 menor = dist[i];
+//                 u = i;
+//             }
+//         }
 
+//         if (u == -1 || u == destino) break;
 
+//         visitado[u] = true;
 
+//         Lista adj = criaLista();
+//         adjacentEdges(g, u, adj);
 
+//         for (Celula c = getInicioLista(adj); c != NULL; c = getProxCelula(c)) {
+//             Edge e = getConteudoCelula(c);
+//             Node v = getToNode(g, e);
 
+//             double peso = calcularCusto(getEdgeInfo(g, e));
+//             if (!visitado[v] && dist[u] + peso < dist[v]) {
+//                 dist[v] = dist[u] + peso;
+//                 (*predecessores)[v] = u;
+//             }
+//         }
 
+//         liberaLista(adj);
+//     }
 
+//     free(visitado);
+//     return dist;
+// }
