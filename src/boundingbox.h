@@ -122,7 +122,7 @@ double getHBoundingBox(BoundingBox bb);
 /// @param x2 ancora x do segundo ponto extremo 
 /// @param y2 ancora y do segundo ponto extremo
 /// @return retorna true se a forma é interna a região, retorna falso se não.
-bool BBinternoRegiao(Node n, BoundingBox i, double x1, double y1, double x2, double y2);
+bool BBinternoRegiao(SmuNode n, BoundingBox i, double x1, double y1, double x2, double y2);
 
 
 /// @brief vericica se um ponto (x, y) é interno a uma forma (texto, linha, circulo, retangulo)
@@ -131,6 +131,6 @@ bool BBinternoRegiao(Node n, BoundingBox i, double x1, double y1, double x2, dou
 /// @param x ancora x do ponto 
 /// @param y ancora y do ponto
 /// @return retorna true se o ponto é interno a forma passada como parametro, retorna false se não.
-bool PontoInternoFormas(Node n, Info forma, double x, double y);
+bool PontoInternoFormas(SmuNode n, Info forma, double x, double y);
 
 #endif

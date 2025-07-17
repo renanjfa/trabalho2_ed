@@ -20,11 +20,6 @@ typedef struct stQuadra {
     double w, h;
 } stQuadra;
 
-typedef struct stEndereco {
-    char *nomeQuadra;
-    char setor;
-    int numero; // distancia da projecao da ancora
-} stEndereco;
 
 
 typedef struct stEsquina {

@@ -167,7 +167,7 @@ typedef struct ponto {
     double x, y;
 } Ponto;
 
-bool BBinternoRegiao(Node r, BoundingBox bbinfo, double x1, double y1, double x2, double y2) {
+bool BBinternoRegiao(SmuNode r, BoundingBox bbinfo, double x1, double y1, double x2, double y2) {
     Ponto p1, p4;
     p1.x = ((stBB*)bbinfo)->x; 
     p1.y = ((stBB*)bbinfo)->y;
@@ -206,7 +206,7 @@ bool pontoInternoLinha(double x, double y, double x1, double y1, double x2, doub
 }
 
 
-bool PontoInternoFormas(Node r, Info i, double x, double y) {
+bool PontoInternoFormas(SmuNode r, Info i, double x, double y) {
     double x1, y1, raio, w, h, x2, y2;
     double epsilon = 0.0001;
     int descritor = getTypeInfoSrbT(0, r);
@@ -215,24 +215,24 @@ bool PontoInternoFormas(Node r, Info i, double x, double y) {
         case TPC:
             x1 = getXCirculo(i); y1 = getYCirculo(i);
             raio = getRCirculo(i);
-            if( (sqrt(pow(x1 - x, 2) + pow(y1 - y, 2)) <= raio + epsilon) && !getDispCirculo(i))
+            if( (sqrt(pow(x1 - x, 2) + pow(y1 - y, 2)) <= raio + epsilon))
                 return true;
             break;
         case TPL:
             x1 = getX1Linha(i); y1 = getY1Linha(i);
             x2 = getX2Linha(i); y2 = getY2Linha(i);
-            if(pontoInternoLinha(x, y, x1, y1, x2, y2, epsilon) && !getDispLinha(i))
+            if(pontoInternoLinha(x, y, x1, y1, x2, y2, epsilon))
                 return true;
             break;
         case TPR:   
             x1 = getXRetangulo(i); y1 = getYRetangulo(i);
             w = getWRetangulo(i); h = getHRetangulo(i);
-            if((x >= x1 - epsilon && x <= x1 + w + epsilon) && (y >= y1 - epsilon && y <= y1 + h + epsilon) && !getDispRetangulo(i))
+            if((x >= x1 - epsilon && x <= x1 + w + epsilon) && (y >= y1 - epsilon && y <= y1 + h + epsilon))
                 return true;
             break;
         case TPT:
             x1 = getXTexto(i); y1 = getYTexto(i);
-            if(fabs(x - x1) <= epsilon && fabs(y - y1) <= epsilon && !getDispTexto(i)) 
+            if(fabs(x - x1) <= epsilon && fabs(y - y1) <= epsilon ) 
                 return true;
             break;
     }

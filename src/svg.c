@@ -51,8 +51,8 @@ void insertTextSVG(FILE *svg, Texto t) {
 }
 
 
-void printPathSVG(FILE *svg, Percurso p, char *nomepath) {
-    Lista path = getPathPercurso(p);
+void printPathCMCSVG(FILE *svg, Percurso p, char *nomepath) {
+    Lista path = getPathCMCPercurso(p);
     double x, y;
 
     fprintf(svg, "<path d=\"M");
@@ -65,6 +65,27 @@ void printPathSVG(FILE *svg, Percurso p, char *nomepath) {
 
         fprintf(svg, " %lf,%lf", x, y);
     }
+
+    strcat(nomepath, "cmc");
+    fprintf(svg, "\" id=\"%s\" />", nomepath);
+}
+
+void printPathCMRSVG(FILE *svg, Percurso p, char *nomepath) {
+    Lista path = getPathCMRPercurso(p);
+    double x, y;
+
+    fprintf(svg, "<path d=\"M");
+
+    for(Celula p = getInicioLista(path); p != NULL; p = getProxCelula(p)) {
+        Coordenadas atual = getConteudoCelula(p);
+
+        x = getXCoord(atual);
+        y = getYCoord(atual);
+
+        fprintf(svg, " %lf,%lf", x, y);
+    }
+
+    strcat(nomepath, "cmr");
     fprintf(svg, "\" id=\"%s\" />", nomepath);
 }
 

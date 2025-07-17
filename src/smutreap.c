@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <math.h>
 
 #include "smutreap.h"
 #include "boundingbox.h"
@@ -30,7 +31,7 @@ typedef struct stSmuTreap {
     double promotionRate;
     double epsilon;
     int prioMax;
-    Node *raiz; 
+    SmuNode *raiz; 
 } stSmuTreap;
 
 SmuTreap newSmuTreap(int hitCount, double promotionRate, double epsilon, int prioMax) {
@@ -43,7 +44,7 @@ SmuTreap newSmuTreap(int hitCount, double promotionRate, double epsilon, int pri
     return ((stSmuTreap*)smu);
 }
 
-Node criarNode(double x, double y, Info info, DescritorTipoInfo d, FCalculaBoundingBox calcBB, Node pai, int priori) {
+SmuNode criarNode(double x, double y, Info info, DescritorTipoInfo d, FCalculaBoundingBox calcBB, SmuNode pai, int priori) {
 
     stNode *new = malloc(sizeof(stNode));
 
@@ -63,7 +64,7 @@ Node criarNode(double x, double y, Info info, DescritorTipoInfo d, FCalculaBound
     return ((stNode*)new);
 }
 
-void uniaoGeralBoundingBox(Node r) {
+void uniaoGeralBoundingBox(SmuNode r) {
     if(((stNode*)r)->esq == NULL && ((stNode*)r)->dir == NULL) 
         uniaoBBSemFilhos(((stNode*)r)->bbsub, ((stNode*)r)->bbinfo);
     else if(((stNode*)r)->esq == NULL && ((stNode*)r)->dir != NULL)
@@ -74,11 +75,11 @@ void uniaoGeralBoundingBox(Node r) {
         uniaoBBAmbosFilhos(((stNode*)r)->bbsub, ((stNode*)r)->bbinfo, ((stNode*)r)->esq->bbsub, ((stNode*)r)->dir->bbsub);
 } 
 
-Node rotacionaDireita(Node r) {
-    Node v = ((stNode*)r)->esq;
+SmuNode rotacionaDireita(SmuNode r) {
+    SmuNode v = ((stNode*)r)->esq;
     if (!v) return r;  
     
-    Node acertobb = ((stNode*)v)->dir;
+    SmuNode acertobb = ((stNode*)v)->dir;
     bool acerto = false;
     
     if(((stNode*)v)->esq != NULL && ((stNode*)v)->dir != NULL) 
@@ -107,11 +108,11 @@ Node rotacionaDireita(Node r) {
     return v; 
 }
 
-Node rotacionaEsquerda(Node r) {
-    Node v = ((stNode*)r)->dir;
+SmuNode rotacionaEsquerda(SmuNode r) {
+    SmuNode v = ((stNode*)r)->dir;
     if(!v) return r;
     
-    Node acertobb = ((stNode*)v)->esq;
+    SmuNode acertobb = ((stNode*)v)->esq;
     bool acerto = false;
 
     if(((stNode*)v)->esq != NULL && ((stNode*)v)->dir != NULL) 
@@ -142,8 +143,8 @@ Node rotacionaEsquerda(Node r) {
 
 
 
-Node insertSmuTAux(SmuTreap t, Node r, double x, double y, Info i, DescritorTipoInfo d, FCalculaBoundingBox f, Node pai, int priori) {
-    Node paidef = pai;
+SmuNode insertSmuTAux(SmuTreap t, SmuNode r, double x, double y, Info i, DescritorTipoInfo d, FCalculaBoundingBox f, SmuNode pai, int priori) {
+    SmuNode paidef = pai;
     if(r == NULL) {
         return criarNode(x, y, i, d, f, paidef, priori);
     }
@@ -175,15 +176,15 @@ int prioriAleatoria(int prioMax) {
     return rand() % prioMax;
 }
 
-Node insertSmuT(SmuTreap t, double x, double y, Info i, DescritorTipoInfo d, FCalculaBoundingBox f) {
+SmuNode insertSmuT(SmuTreap t, double x, double y, Info i, DescritorTipoInfo d, FCalculaBoundingBox f) {
     if(t == NULL) return NULL;
-    Node pai = NULL;
+    SmuNode pai = NULL;
     int priori = prioriAleatoria(((stSmuTreap*)t)->prioMax);
     ((stSmuTreap*)t)->raiz = insertSmuTAux(t, ((stSmuTreap*)t)->raiz, x, y, i, d, f, pai, priori);
     return ((stSmuTreap*)t)->raiz;
 }
 
-Node rebalanceiaSmuTreap(Node root) {
+SmuNode rebalanceiaSmuTreap(SmuNode root) {
     if (!root) return NULL;
 
     if ( ((stNode*)root)->esq && ((stNode*)root)->esq->priori > ((stNode*)root)->priori) {
@@ -198,7 +199,7 @@ Node rebalanceiaSmuTreap(Node root) {
     return root;
 }
 
-Node RebalanceFromRoot(Node r) {
+SmuNode RebalanceFromRoot(SmuNode r) {
     if(r==NULL) return NULL;
     
     ((stNode*)r)->esq = RebalanceFromRoot(((stNode*)r)->esq);
@@ -209,12 +210,12 @@ Node RebalanceFromRoot(Node r) {
 }
 
 
-void removeNoSmuT(SmuTreap t, Node no) {
+void removeNoSmuT(SmuTreap t, SmuNode no) {
     if (no == NULL) return;
 
     // Caso do no ser uma folha
     if (((stNode*)no)->esq == NULL && ((stNode*)no)->dir == NULL) {
-        Node pai = ((stNode*)no)->pai;
+        SmuNode pai = ((stNode*)no)->pai;
 
         if (pai != NULL) {
             if (((stNode*)pai)->dir == no) {
@@ -233,8 +234,8 @@ void removeNoSmuT(SmuTreap t, Node no) {
 
     // Caso de um filho
     else if (((stNode*)no)->esq == NULL || ((stNode*)no)->dir == NULL) {
-        Node pai = ((stNode*)no)->pai;
-        Node filho = (((stNode*)no)->esq != NULL) ? ((stNode*)no)->esq : ((stNode*)no)->dir;
+        SmuNode pai = ((stNode*)no)->pai;
+        SmuNode filho = (((stNode*)no)->esq != NULL) ? ((stNode*)no)->esq : ((stNode*)no)->dir;
 
         if (pai != NULL) {
             if (((stNode*)pai)->esq == no) {
@@ -252,7 +253,7 @@ void removeNoSmuT(SmuTreap t, Node no) {
 
     // Caso de no com dois filhos
     else {
-        Node sucessor;
+        SmuNode sucessor;
         if (((stNode*)no)->esq->priori > ((stNode*)no)->dir->priori) {
             sucessor = ((stNode*)no)->esq;
             while (((stNode*)sucessor)->dir != NULL) {
@@ -278,7 +279,7 @@ void removeNoSmuT(SmuTreap t, Node no) {
     }
 }
 
-void visitaProfundidadeAux(SmuTreap t, Node r, FvisitaNo f, void *aux) {
+void visitaProfundidadeAux(SmuTreap t, SmuNode r, FvisitaNo f, void *aux) {
     if(r == NULL) return;
 
     f(r, ((stNode*)r)->info, ((stNode*)r)->anc.x, ((stNode*)r)->anc.y, aux);
@@ -292,7 +293,7 @@ void visitaProfundidadeSmuT(SmuTreap t, FvisitaNo f, void *aux) {
     visitaProfundidadeAux(t, ((stSmuTreap*)t)->raiz, f, aux);
 }
 
-void promoteNodeSmuT(SmuTreap t, Node n, double promotionRate) {
+void promoteNodeSmuT(SmuTreap t, SmuNode n, double promotionRate) {
     if(!t || !n) return;
     
     ((stNode*)n)->priori = ((stNode*)n)->priori * promotionRate;
@@ -303,7 +304,7 @@ void promoteNodeSmuT(SmuTreap t, Node n, double promotionRate) {
     }   
 }
 
-Node getNodeSmuTAux(SmuTreap t, Node r, double x, double y, int *promotion) {
+SmuNode getNodeSmuTAux(SmuTreap t, SmuNode r, double x, double y, int *promotion) {
     if (r == NULL) {
         printf("Nao existe node com estas coordenadas!!\n");
         return NULL;
@@ -336,7 +337,7 @@ Node getNodeSmuTAux(SmuTreap t, Node r, double x, double y, int *promotion) {
     return r;
 }
 
-Node getNodeSmuT(SmuTreap t, double x, double y) {
+SmuNode getNodeSmuT(SmuTreap t, double x, double y) {
     if(!t) return NULL;
     int promotion = 0;
     ((stSmuTreap*)t)->raiz = getNodeSmuTAux(t, ((stSmuTreap*)t)->raiz, x, y, &promotion);
@@ -344,7 +345,7 @@ Node getNodeSmuT(SmuTreap t, double x, double y) {
 }
 
 
-void getNodesDentroRegiaoSmuTAux(SmuTreap t, Node r, double x1, double y1, double x2, double y2, Lista L) {
+void getNodesDentroRegiaoSmuTAux(SmuTreap t, SmuNode r, double x1, double y1, double x2, double y2, Lista L) {
     if(r == NULL) return;
 
     int x = ((stNode*)r)->anc.x;
@@ -356,7 +357,7 @@ void getNodesDentroRegiaoSmuTAux(SmuTreap t, Node r, double x1, double y1, doubl
         y1 + epsilon >= y && y >= y2 - epsilon)
     {
         ((stNode*)r)->promotionCount++;
-        inserirLista(L, r);
+        insereLista(L, r);
         if (((stNode*)r)->promotionCount >= ((stSmuTreap*)t)->hitCount) {
             promoteNodeSmuT(t, r, ((stSmuTreap*)t)->promotionRate);
         }
@@ -371,16 +372,16 @@ bool getNodesDentroRegiaoSmuT(SmuTreap t, double x1, double y1, double x2, doubl
     bool verif = true;
 
     getNodesDentroRegiaoSmuTAux(t, ((stSmuTreap*)t)->raiz, x1, y1, x2, y2, L);
-    if(tamLista(L) == 0) {
+    if(getTamanhoLista(L) == 0) {
         verif = false;
-        liberarLista(L);
+        liberaLista(L);
     }
 
     //((stSmuTreap*)t)->raiz = RebalanceFromRoot(((stSmuTreap*)t)->raiz);
     return verif;
 }
 
-bool verificacaoDescida(SmuTreap t, Node r, double x1, double y1, double x2, double y2) {
+bool verificacaoDescida(SmuTreap t, SmuNode r, double x1, double y1, double x2, double y2) {
     double bb_x = getXBoundingBox(((stNode*)r)->bbsub);
     double bb_y = getYBoundingBox(((stNode*)r)->bbsub);
     double bb_w = getWBoundingBox(((stNode*)r)->bbsub);
@@ -399,7 +400,7 @@ bool verificacaoDescida(SmuTreap t, Node r, double x1, double y1, double x2, dou
     return intersecta;
 }
 
-void getInfoDentroRegiaoSmuTAux(SmuTreap t, Node r, double x1, double y1, double x2, double y2, FdentroDeRegiao f, Lista L) {
+void getInfoDentroRegiaoSmuTAux(SmuTreap t, SmuNode r, double x1, double y1, double x2, double y2, FdentroDeRegiao f, Lista L) {
     if(r==NULL) return;
 
     // verificao boundingbox da forma interna a selr
@@ -418,7 +419,7 @@ void getInfoDentroRegiaoSmuTAux(SmuTreap t, Node r, double x1, double y1, double
         if (((stNode*)r)->promotionCount >= ((stSmuTreap*)t)->hitCount) {
             promoteNodeSmuT(t, r, ((stSmuTreap*)t)->promotionRate);
         }
-        inserirLista(L, r);
+        insereLista(L, r);
     }
 }
 
@@ -430,17 +431,17 @@ bool getInfosDentroRegiaoSmuT(SmuTreap t, double x1, double y1, double w, double
     y2 = y1 + h;
 
     getInfoDentroRegiaoSmuTAux(t, ((stSmuTreap*)t)->raiz, x1, y1, x2, y2, f, L);
-    if(tamLista(L) == 0) {
+    if(getTamanhoLista(L) == 0) {
         printf("Nao existem nos dentro da regiao solicitada!!\n");
         return false;
     }
 
     //((stSmuTreap*)t)->raiz = RebalanceFromRoot(((stSmuTreap*)t)->raiz);
-    printf("\nTAM LISTA INFO DENTRO REGIAO = %d\n\n", tamLista(L));
+    printf("\nTAM LISTA INFO DENTRO REGIAO = %d\n\n", getTamanhoLista(L));
     return verif;
 }
 
-bool verificacaoDescidaPonto(SmuTreap t, Node r, double x, double y) {
+bool verificacaoDescidaPonto(SmuTreap t, SmuNode r, double x, double y) {
     if (r==NULL) return false;
 
     double bb_left = getXBoundingBox(((stNode*)r)->bbsub);
@@ -463,18 +464,18 @@ bool verificacaoDescidaPonto(SmuTreap t, Node r, double x, double y) {
 }
 
 
-bool pertenceTreapAux(Node atual, Node r) {
+bool pertenceTreapAux(SmuNode atual, SmuNode r) {
     if (atual == NULL) return false;
     if (atual == r) return true;
     return pertenceTreapAux(((stNode*)atual)->esq, r) || 
            pertenceTreapAux(((stNode*)atual)->dir, r);
 }
 
-bool pertenceTreap(SmuTreap t, Node r) {
+bool pertenceTreap(SmuTreap t, SmuNode r) {
     return pertenceTreapAux(((stSmuTreap*)t)->raiz, r);
 }
 
-void getInfosAntigidoAux(SmuTreap t, Node r, double x, double y, FpontoInternoAInfo f, Lista l) {
+void getInfosAntigidoAux(SmuTreap t, SmuNode r, double x, double y, FpontoInternoAInfo f, Lista l) {
     if(r==NULL) return;
 
     // if (!pertenceTreap(t, r)) {
@@ -494,7 +495,7 @@ void getInfosAntigidoAux(SmuTreap t, Node r, double x, double y, FpontoInternoAI
         if (((stNode*)r)->promotionCount >= ((stSmuTreap*)t)->hitCount) {
             promoteNodeSmuT(t, r, ((stSmuTreap*)t)->promotionRate);
         }
-        inserirLista(l, r);
+        insereLista(l, r);
     }
 }
 
@@ -502,24 +503,24 @@ bool getInfosAtingidoPontoSmuT(SmuTreap t, double x, double y, FpontoInternoAInf
     if(t==NULL) return false;
 
     getInfosAntigidoAux(t, ((stSmuTreap*)t)->raiz, x, y, f, L);
-    if(tamLista(L) == 0) {
+    if(getTamanhoLista(L) == 0) {
         return false;
     }
 
-    printf("TAM LISTA INFO ATINGIDOS: %d\n\n", tamLista(L));
+    printf("TAM LISTA INFO ATINGIDOS: %d\n\n", getTamanhoLista(L));
     return true;
 }
 
 
-DescritorTipoInfo getTypeInfoSrbT(SmuTreap t, Node n) {
+DescritorTipoInfo getTypeInfoSrbT(SmuTreap t, SmuNode n) {
     return ((stNode*)n)->d;
 }
 
-Info getInfoSmuT(SmuTreap t , Node n) {
+Info getInfoSmuT(SmuTreap t , SmuNode n) {
     return ((stNode*)n)->info;
 }
 
-Info getBoundingBoxSmuT(SmuTreap t, Node r, double *x, double *y, double *w, double *h) {
+Info getBoundingBoxSmuT(SmuTreap t, SmuNode r, double *x, double *y, double *w, double *h) {
     *x = getXBoundingBox(((stNode*)r)->bbinfo);
     *y = getYBoundingBox(((stNode*)r)->bbinfo);
     *w = getWBoundingBox(((stNode*)r)->bbinfo);
@@ -528,7 +529,7 @@ Info getBoundingBoxSmuT(SmuTreap t, Node r, double *x, double *y, double *w, dou
     return ((stNode*)r)->bbinfo;
 }
 
-void killSmuTreapAux(Node r) {
+void killSmuTreapAux(SmuNode r) {
     if(r == NULL)
         return;
 
@@ -546,7 +547,7 @@ void killSmuTreap(SmuTreap t) {
     free(t);
 }
 
-void printDotRecursive(SmuTreap t, Node root, FILE *fp) {
+void printDotRecursive(SmuTreap t, SmuNode root, FILE *fp) {
     if (root == NULL) return;
  
     int descritor = ((stNode*)root)->d;
@@ -614,7 +615,7 @@ bool printDotSmuTreap(SmuTreap t, char *fn) {
 }
 
 
-Node procuraNoSmuTAux(SmuTreap t, Node r, FsearchNo f, void *aux) {
+SmuNode procuraNoSmuTAux(SmuTreap t, SmuNode r, FsearchNo f, void *aux) {
     if(r==NULL) return NULL;
 
     if(f(r, getInfoSmuT(t, r), ((stNode*)r)->anc.x, ((stNode*)r)->anc.y, aux));
@@ -625,15 +626,15 @@ Node procuraNoSmuTAux(SmuTreap t, Node r, FsearchNo f, void *aux) {
     return r;
 }
 
-Node procuraNoSmuT(SmuTreap t, FsearchNo f, void *aux) {
+SmuNode procuraNoSmuT(SmuTreap t, FsearchNo f, void *aux) {
     if (t == NULL) return NULL;
-    Node r = procuraNoSmuTAux(t, ((stSmuTreap*)t)->raiz, f, aux);
+    SmuNode r = procuraNoSmuTAux(t, ((stSmuTreap*)t)->raiz, f, aux);
 }
 
 
 
 typedef struct FilaNo {
-    Node r;
+    SmuNode r;
     struct FilaNo *prox;
 } FilaNo;
 
@@ -641,7 +642,7 @@ typedef struct {
     FilaNo *ini, *fim;
 } Fila;
 
-void inserirFila(Fila *fila, Node n) {
+void inserirFila(Fila *fila, SmuNode n) {
     FilaNo *novo = malloc(sizeof(FilaNo));
     novo->r = n;
     novo->prox = NULL;
@@ -653,11 +654,11 @@ void inserirFila(Fila *fila, Node n) {
     fila->fim = novo;
 }
 
-Node retirarFila(Fila *fila) {
+SmuNode retirarFila(Fila *fila) {
     if (!fila->ini) return NULL;
 
     FilaNo *rem = fila->ini;
-    Node no = rem->r;
+    SmuNode no = rem->r;
     fila->ini = rem->prox;
 
     if (!fila->ini) 
@@ -678,7 +679,7 @@ void visitaLarguraSmuT(SmuTreap t, FvisitaNo f, void *aux) {
 
     while (!filaVazia(&fila)) {
 
-        Node atual = retirarFila(&fila);
+        SmuNode atual = retirarFila(&fila);
         f(atual, ((stNode*)atual)->info, ((stNode*)atual)->anc.x, ((stNode*)atual)->anc.y, aux);
         
         if (((stNode*)atual)->esq) 

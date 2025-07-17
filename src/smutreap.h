@@ -66,24 +66,24 @@
  */
 
 typedef void *SmuTreap;
-typedef void *Node;
+typedef void *SmuNode;
 typedef void *Info;
 typedef int DescritorTipoInfo;
 
-typedef bool (*FdentroDeRegiao)(Node n, Info i, double x1, double y1, double x2, double y2);
+typedef bool (*FdentroDeRegiao)(SmuNode n, Info i, double x1, double y1, double x2, double y2);
 /*
  * Uma funcao deste tipo deve retornar verdadeiro se a informacao i esta'
  * "dentro" da regiao retangular delimitada pelos pontos opostos (x1,y1) e (x2,y2).
  * Retorna falso, caso contrario.
  */
 
-typedef bool (*FpontoInternoAInfo)(Node n, Info i, double x, double y);
+typedef bool (*FpontoInternoAInfo)(SmuNode n, Info i, double x, double y);
 /*
  * Uma funcao deste tipo deve retornar verdadeiro se o ponto (x,y)
  * deva ser considerado "interno" `a informacao i.
  */
 
-typedef void (*FvisitaNo)(Node n, Info i, double x, double y, void *aux);   
+typedef void (*FvisitaNo)(SmuNode n, Info i, double x, double y, void *aux);   
 /*
  * Processa a informacao i associada a um no' da arvore, cuja ancora
  * e' o ponto (x,y). O parametro aux aponta para conjunto de dados
@@ -98,7 +98,7 @@ typedef void (*FCalculaBoundingBox)(Info i, double *x, double *y, double *w, dou
  * do retangulo.
  */
 
-typedef bool (*FsearchNo)(Node n, Info i, double x, double y, void *aux);
+typedef bool (*FsearchNo)(SmuNode n, Info i, double x, double y, void *aux);
 /*
  * Verifica se a informacao i associada a um no' da arvore, cuja ancora
  * e' o ponto (x,y) e' a informacao procurada. Retorna verdadeiro, em caso
@@ -116,7 +116,7 @@ SmuTreap newSmuTreap(int hitCount, double promotionRate, double epsilon, int pri
  * do no'.
  */
 
-Node insertSmuT(SmuTreap t, double x, double y, Info i, DescritorTipoInfo d, FCalculaBoundingBox f);  
+SmuNode insertSmuT(SmuTreap t, double x, double y, Info i, DescritorTipoInfo d, FCalculaBoundingBox f);  
 /*
  * Insere a informacao i, associada 'a ancora (x,y) na arvore t.
  * d e' um valor (definido pela aplicacao) que identifica, caso existam varias
@@ -126,35 +126,35 @@ Node insertSmuT(SmuTreap t, double x, double y, Info i, DescritorTipoInfo d, FCa
  */
 
 
-Node getNodeSmuT(SmuTreap t, double x, double y);    
+SmuNode getNodeSmuT(SmuTreap t, double x, double y);    
 /*
  * Retorna o no' cuja ancora seja o ponto (x,y), admitida a discrepancia
  * epsilon definida na criacao da arvore.
  * Retorna NULL caso nao tenha encontrado o no'.
  */
 
-DescritorTipoInfo getTypeInfoSrbT(SmuTreap t, Node n);   
+DescritorTipoInfo getTypeInfoSrbT(SmuTreap t, SmuNode n);   
 /* 
  * Retorna o tipo da informacao associada ao no' n 
 */
 
-void promoteNodeSmuT(SmuTreap t, Node n, double promotionRate);    
+void promoteNodeSmuT(SmuTreap t, SmuNode n, double promotionRate);    
 /*
  * Aumenta a prioridade do no' n pelo fator promotionRate.
  */
 
 
-void removeNoSmuT(SmuTreap t, Node n); 
+void removeNoSmuT(SmuTreap t, SmuNode n); 
 /*
 * Remove o no' n da arvore. O no' n deve ser um no' valido.
 */
 
-Info getInfoSmuT(SmuTreap t, Node n);   
+Info getInfoSmuT(SmuTreap t, SmuNode n);   
 /* 
  * Retorna a informacao associada ao no' n 
  */
 
-Info getBoundingBoxSmuT(SmuTreap t, Node n, double *x, double *y, double *w, double *h);
+Info getBoundingBoxSmuT(SmuTreap t, SmuNode n, double *x, double *y, double *w, double *h);
 /* 
  * Retorna o bounding box associado ao no' n 
  */
@@ -191,7 +191,7 @@ void visitaLarguraSmuT(SmuTreap t, FvisitaNo f, void *aux);
 /* Similar a visitaProfundidadeSmuT, porem, faz o percurso em largura.
  */
 
-Node procuraNoSmuT(SmuTreap t, FsearchNo f, void *aux);
+SmuNode procuraNoSmuT(SmuTreap t, FsearchNo f, void *aux);
 /* Procura o no' da arvore que contenha um dado especifico.
    Visita cada no' da arvore e invoca a funcao f. A funcao f
    retornara' verdadeiro se o no' contem o dado procurado.

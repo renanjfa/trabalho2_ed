@@ -27,7 +27,10 @@ void insertLineSVG(FILE *svg, Linha l);
 
 void insertTextSVG(FILE *svg, Texto t);
 
-void printPathSVG(FILE *svg, Percurso p, char *nomepath);
+void printPathCMCSVG(FILE *svg, Percurso p, char *nomepath);
+
+void printPathCMRSVG(FILE *svg, Percurso p, char *nomepath);
+
 
 void printAnimationSVG(FILE *svg, char *idpath);
 

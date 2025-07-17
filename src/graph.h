@@ -140,6 +140,17 @@ Info getEdgeInfo(Graph g, Edge e);
 
 
 /*
+   Retorna true caso a aresta esteja habilitada para uso, caso contrario false.
+*/
+bool isHabilitadaEdge(Graph g, Edge e);
+
+/*
+   Modifica a flag de habilitacao da aresta e.
+*/
+void setHabilitadaEdge(Graph g, Edge e, bool new_state);
+
+
+/*
    Modifica a informação associada a aresta e pela nova informação "info".
  */
 void setEdgeInfo(Graph g, Edge e, Info info);
@@ -212,6 +223,7 @@ void killDG(Graph g);
  **********************
  * SUB-GRAFOS
  **********************
+*/
 /*
     Calcula o subgrafo composto  pelos vertices cujos nomes estao no vetor nomesVerts
 (nVerts e' o tamanho deste vetor). Caso comAresta seja true calcula o subgrafo 

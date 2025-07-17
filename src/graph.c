@@ -128,6 +128,15 @@ Info getEdgeInfo(Graph g, Edge e) {
     return ((stEdge*)e)->dados; 
 }
 
+bool isHabilitadaEdge(Graph g, Edge e) {
+    return ((stEdge*)e)->habilitado;
+}
+
+void setHabilitadaEdge(Graph g, Edge e, bool new_state) {
+    ((stEdge*)e)->habilitado = new_state;
+}
+
+
 
 void setEdgeInfo(Graph g, Edge e, Info info) {
     ((stEdge*)e)->dados = info;
@@ -143,6 +152,7 @@ Edge addEdge(Graph g, Node from, Node to, Info info) {
     new_edge->from = from;
     new_edge->to = to;
     new_edge->dados = info;
+    new_edge->habilitado = true;
 
     // fazer verificacao se o node esta adicionado ou nao para adicionar edge
     insereLista(((stGraph*)g)->vertices[from]->adjacentes, new_edge);
@@ -155,6 +165,7 @@ Edge addEdge(Graph g, Node from, Node to, Info info) {
        reverse_edge->from = to;
        reverse_edge->to = from;
        reverse_edge->dados = info; 
+       reverse_edge->habilitado = true;
 
        // fazer verificacao se o node esta adicionado ou nao para adicionar edge
         insereLista(((stGraph*)g)->vertices[to]->adjacentes, reverse_edge);
@@ -230,14 +241,27 @@ void adjacentEdges(Graph g, Node node, Lista arestasAdjacentes) {
 
 }
 
-void getEdges(Graph g, Lista arestas) {
+
+
+void getEdgesAux(Graph g, Lista arestas, Lista adj) {
     if(!g || !arestas) return;
 
-    Celula inicio = getInicioLista(((stGraph*)g)->edges);
-    for(Celula p = inicio; p != NULL; p = getProxCelula(p)) {
+    for(Celula p = getInicioLista(adj); p != NULL; p = getProxCelula(p)) {
         Edge atual = getConteudoCelula(p);
 
         insereLista(arestas, atual);
+    }
+}
+
+
+void getEdges(Graph g, Lista arestas) {
+    if(!g || !arestas) return;
+
+    int tamanho = ((stGraph*)g)->maxNodes;
+    for(int i = 0; i<tamanho; i++) {
+        if(((stGraph*)g)->vertices[i]->adicionado) {
+            getEdgesAux(g, arestas, ((stGraph*)g)->vertices[i]->adjacentes);
+        }
     }
 }
 

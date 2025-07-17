@@ -94,6 +94,16 @@ int getOrCreateNode(HashTable tabela, char *key, int *proxId) {
     return novo;
 }
 
+void percorrerHashTable(HashTable ht, Callback c, void *extra) {
+    for (int i = 0; i < ((stHashTable*)ht)->tamanho; i++) {
+        HashNode* node = ((stHashTable*)ht)->buckets[i];
+        while (node != NULL) {
+            c(((stHN*)node)->key, ((stHN*)node)->value, extra);
+            node = ((stHN*)node)->proximo;
+        }
+    }
+}
+
 
 // int main() {
 //     // Criar tabela com tamanho inicial adequado
