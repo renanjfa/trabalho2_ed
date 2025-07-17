@@ -43,7 +43,9 @@ char* getOrigemPercurso(Percurso p);
 
 char* getDestinoPercurso(Percurso p);
 
-Lista getPathPercurso(Percurso p);
+Lista getPathCMRPercurso(Percurso p);
+
+Lista getPathCMCPercurso(Percurso p);
 
 /* ----- METODOS SET PERCURSO ----- */
 
@@ -55,7 +57,10 @@ void setDestinoPercurso(Percurso p, char *destino);
 
 /* ----- METODOS EXTRAS AUXILIARES PERCURSO ----- */
 
-void insertPathPercurso(Percurso p, Coordenadas c);
+void insertPathCMRPercurso(Percurso p, Coordenadas c);
+    
+void insertPathCMCPercurso(Percurso p, Coordenadas c);
+
 
 
 

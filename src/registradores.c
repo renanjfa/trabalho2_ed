@@ -16,9 +16,10 @@ typedef struct stEndereco {
 
 typedef struct stPercurso {
     char *nome;
-    char *origem;
-    char *destino;
-    Lista path;
+    char *origem;   // nome do endereco de origem
+    char *destino;  // nome do endereco de destino
+    Lista path_cmc;
+    Lista path_cmr;
 } stPercurso;
 
 
@@ -91,7 +92,8 @@ Percurso createPercurso(char *nome, char *origem, char *destino) {
     }
     strcpy(p->destino, destino);
 
-    p->path = criaLista();
+    p->path_cmc = criaLista();
+    p->path_cmr = criaLista();
 
     return ((stPercurso*)p);
 }
@@ -122,12 +124,20 @@ void setDestinoPercurso(Percurso p, char *destino) {
     strcpy(((stPercurso*)p)->destino, destino);
 }
 
-void insertPathPercurso(Percurso p, Coordenadas c) {
-    insereLista(((stPercurso*)p)->path, c);
+void insertPathCMRPercurso(Percurso p, Coordenadas c) {
+    insereLista(((stPercurso*)p)->path_cmr, c);
 }
 
-Lista getPathPercurso(Percurso p) {
-    return ((stPercurso*)p)->path;
+void insertPathCMCPercurso(Percurso p, Coordenadas c) {
+    insereLista(((stPercurso*)p)->path_cmc, c);
+}
+
+Lista getPathCMRPercurso(Percurso p) {
+    return ((stPercurso*)p)->path_cmr;
+}
+
+Lista getPathCMCPercurso(Percurso p) {
+    return ((stPercurso*)p)->path_cmc;
 }
 
 
