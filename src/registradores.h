@@ -3,6 +3,9 @@
 
 typedef void *Endereco;
 typedef void *Percurso;
+typedef void *Coordenadas;
+
+#include "lista.h"
 
 
 /* ----- CONSTRUTOR ENDERECO ----- */
@@ -40,6 +43,8 @@ char* getOrigemPercurso(Percurso p);
 
 char* getDestinoPercurso(Percurso p);
 
+Lista getPathPercurso(Percurso p);
+
 /* ----- METODOS SET PERCURSO ----- */
 
 void setNomePercurso(Percurso p, char *nome);
@@ -48,6 +53,26 @@ void setOrigemPercurso(Percurso p, char *origem);
 
 void setDestinoPercurso(Percurso p, char *destino);
 
+/* ----- METODOS EXTRAS AUXILIARES PERCURSO ----- */
 
+void insertPathPercurso(Percurso p, Coordenadas c);
+
+
+
+/* ----- CONSTRUTOR COORDENADAS ----- */
+
+Coordenadas createCoordenadas(double x, double y);
+
+/* ----- METODOS GET COORDENADAS ----- */
+
+double getXCoord(Coordenadas c);
+
+double getYCoord(Coordenadas c);
+
+/* ----- METODOS SET COORDENADAS ----- */
+
+void setXCoord(Coordenadas c, double x);
+
+void setYCoord(Coordenadas c, double y);
 
 #endif

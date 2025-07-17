@@ -2,6 +2,11 @@
 #include <stdlib.h>
 
 #include "registradores.h"
+#include "lista.h"
+
+typedef struct stCoord {
+    double x, y;
+} stCoord;
 
 typedef struct stEndereco {
     char *nomeQuadra;
@@ -13,6 +18,7 @@ typedef struct stPercurso {
     char *nome;
     char *origem;
     char *destino;
+    Lista path;
 } stPercurso;
 
 
@@ -85,6 +91,8 @@ Percurso createPercurso(char *nome, char *origem, char *destino) {
     }
     strcpy(p->destino, destino);
 
+    p->path = criaLista();
+
     return ((stPercurso*)p);
 }
 
@@ -112,4 +120,41 @@ void setOrigemPercurso(Percurso p, char *origem) {
 
 void setDestinoPercurso(Percurso p, char *destino) {
     strcpy(((stPercurso*)p)->destino, destino);
+}
+
+void insertPathPercurso(Percurso p, Coordenadas c) {
+    insereLista(((stPercurso*)p)->path, c);
+}
+
+Lista getPathPercurso(Percurso p) {
+    return ((stPercurso*)p)->path;
+}
+
+
+
+
+
+Coordenadas createCoordenadas(double x, double y) {
+    stCoord *c = malloc(sizeof(stCoord));
+
+    c->x = x;
+    c->y = y;
+
+    return ((stCoord*)c);
+}
+
+double getXCoord(Coordenadas c) {
+    return ((stCoord*)c)->x;
+}
+
+double getYCoord(Coordenadas c) {
+    return ((stCoord*)c)->y;
+}
+
+void setXCoord(Coordenadas c, double x) {
+    ((stCoord*)c)->x = x;
+}
+
+void setYCoord(Coordenadas c, double y) {
+    ((stCoord*)c)->y = y;
 }
