@@ -7,6 +7,8 @@ typedef void *ConteudoHashNode;
 
 typedef void (*Callback)(char* key, void* value, void* extra);
 
+void percorrerHashTable(HashTable ht, Callback c, void *extra);
+
 HashTable createHashTable(int tamanho);
 
 void insertHashTable(HashTable tabela, char *key, ConteudoHashNode valor);
@@ -17,7 +19,6 @@ int getOrCreateNode(HashTable tabela, char *key, int *proxId);
 
 
 
-void percorrerHashTable(HashTable ht, Callback c, void *extra);
 
 void destroiHashTable(HashTable tabela, void (*liberaValor)(ConteudoHashNode));
 

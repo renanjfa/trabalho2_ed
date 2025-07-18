@@ -8,7 +8,7 @@
 char* trataDirEntrada(const char* str) {
     
     size_t len = strlen(str);
-    char* dir = (char*)malloc(sizeof(char)*(len + 1));
+    char* dir = (char*)malloc(sizeof(char)*(len + 3));
     if(dir==NULL){
         printf("Erro na alocação de memória da string!\n");
         exit(1);
@@ -38,7 +38,7 @@ char* getNomeGeo(const char* arqgeo) {
         len++;
     }
     
-    char* nomegeo = (char*)malloc(sizeof(char)*(len + 1));
+    char* nomegeo = (char*)malloc(sizeof(char)*(len + 3));
     if (nomegeo == NULL) {
         printf("Erro na alocação de memória da string!\n");
         exit(1);
@@ -65,17 +65,17 @@ char* getNomeVia(const char* arqvia) {
         len++;
     }
     
-    char* nomvia = (char*)malloc(sizeof(char)*(len + 1));
-    if (nomvia == NULL) {
+    char* nomevia = (char*)malloc(sizeof(char)*(len + 3));
+    if (nomevia == NULL) {
         printf("Erro na alocação de memória da string!\n");
         exit(1);
     }
     for (int i = 0; i < len; i++) {
-        nomvia[i] = nomeInicio[i];
+        nomevia[i] = nomeInicio[i];
     }
-    nomvia[len] = '\0';
+    nomevia[len] = '\0';
 
-    return nomvia;
+    return nomevia;
 }
 
 char* getNomeQry(const char* arqqry) {
@@ -96,7 +96,7 @@ char* getNomeQry(const char* arqqry) {
 
     
     size_t tamanho = ponto - nomeInicio;
-    char* nomeqry = (char*)malloc(sizeof(char)*(tamanho + 1)); 
+    char* nomeqry = (char*)malloc(sizeof(char)*(tamanho + 3)); 
     if (nomeqry == NULL) {
         printf("Erro na alocação de memória da string!\n");
         exit(1);
@@ -110,7 +110,7 @@ char* getNomeQry(const char* arqqry) {
 }
 
 char* concatenaNomeQry(const char* nomegeo, const char* nomeqry) {
-    size_t tamanho = strlen(nomegeo) + strlen(nomeqry) + 2; 
+    size_t tamanho = strlen(nomegeo) + strlen(nomeqry) + 3; 
     char* concatnome = (char*)malloc(sizeof(char)*tamanho);
 
     if (concatnome == NULL) {
@@ -127,9 +127,17 @@ char* concatenaNomeQry(const char* nomegeo, const char* nomeqry) {
 }
 
 bool leituraLinha(FILE* arq, char *linha, int max_size) {
-    if (fgets(linha, max_size, arq) != NULL) {
-        return true;
-    } else {
+    if (!arq || !linha) return false;
+
+    if (fgets(linha, max_size, arq) == NULL) {
+        if (feof(arq)) return false; // fim do arquivo
+        if (ferror(arq)) {
+            perror("[ERRO] na leitura do arquivo");
+            exit(1); // ou return false
+        }
         return false;
     }
+
+    linha[strcspn(linha, "\r\n")] = '\0'; // remove \n
+    return true;
 }

@@ -11,7 +11,7 @@
 
 void printSVGCabecalho(FILE *svg) {
     fprintf(svg, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-    fprintf(svg, "<svg width=\"2000\" height=\"2000\" viewBox=\"0 0 192.756 192.756\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"1.1\">\n");
+    fprintf(svg, "<svg viewBox=\"0 0 10500 3500\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"1.1\">\n");
 }
 
 void fecharSVG(FILE *svg) {

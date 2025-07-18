@@ -529,13 +529,19 @@ Info getBoundingBoxSmuT(SmuTreap t, SmuNode r, double *x, double *y, double *w, 
     return ((stNode*)r)->bbinfo;
 }
 
+void freeAllSmuNode(SmuNode r) {
+    free(((stNode*)r)->bbinfo);
+    free(((stNode*)r)->bbsub);
+    free(((stNode*)r)->info);
+}
+
 void killSmuTreapAux(SmuNode r) {
     if(r == NULL)
         return;
 
     killSmuTreapAux(((stNode*)r)->esq);
     killSmuTreapAux(((stNode*)r)->dir);
-    free(r);
+    freeAllSmuNode(r);
 }
 
 void killSmuTreap(SmuTreap t) {

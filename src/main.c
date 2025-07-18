@@ -86,7 +86,6 @@ int main(int argc, char* argv[]) {
         entradavia[0] = '\0';
         strcat(entradavia, dirEntrada);
         strcat(entradavia, arquivoVia);
-
         g = ProcessaVia(entradavia, smuVertices);
     } else {
         g = ProcessaVia(arquivoVia, smuVertices);

@@ -11,12 +11,9 @@
 
 #define MAX_SIZE 10000
 
-
-
-
 Graph LeituraCompletaVia(FILE *arqvia, SmuTreap t) {
     double x, y, comp, veloc;
-    char id[300], i[300], j[300], ldir[300], lesq[300], nome[300];
+    char i[300], j[300], ldir[300], lesq[300], nome[300], id[300];
     char comando[10];
 
     // leitura nv no inicio do arquvio.via e criar graph com nVert
@@ -24,6 +21,7 @@ Graph LeituraCompletaVia(FILE *arqvia, SmuTreap t) {
     fscanf(arqvia, "%d", &nVert);
     Graph g = createGraph(nVert, true, "-");
 
+    printf("passou criar grafo\n");
 
     char linha[MAX_SIZE];
     char aux[MAX_SIZE];
@@ -43,7 +41,6 @@ Graph LeituraCompletaVia(FILE *arqvia, SmuTreap t) {
             addNode(g, id, eq);
 
             insertSmuT(t, x, y, eq, 5, calculaBoundingBoxEsquina);
-
         }
         
         else if(strcmp("e", comando) == 0) {
@@ -51,7 +48,8 @@ Graph LeituraCompletaVia(FILE *arqvia, SmuTreap t) {
 
             Rua rua = createRua(nome, lesq, ldir, comp, veloc);
 
-            addEdge(g, getNode(g, i), getNode(g, i), rua);
+            addEdge(g, getNode(g, i), getNode(g, j), rua);
+
         }
     }
 

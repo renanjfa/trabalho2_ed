@@ -19,6 +19,7 @@ void inserirQuadrasSVG2(char *key, Quadra q, FILE* svg) {
 
     insertQuadraSVG(svg, q);
     insertTextSVG(svg, criarTexto(27, getXQuadra(q)+7, getYQuadra(q)+12, "black", "black", 'i', getNomeQuadra(q), ts));
+    free(ts);
 }
 
 void printEsquinasSVG(SmuNode n, Info i, double x, double y, FILE* svg) {
@@ -26,6 +27,7 @@ void printEsquinasSVG(SmuNode n, Info i, double x, double y, FILE* svg) {
 
     Circulo c = criarCirculo(27, x, y, 2, "orange", "orange");
     insertCircleSVG(svg, c);
+    free(c);
 }
 
 
@@ -131,8 +133,10 @@ void ProcessaQry(const char *pathqry, const char *dirSaida, const char *nomearqs
         exit(1);
     }
 
-    percorrerHashTable(quadras, inserirQuadrasSVG2, &ssvg2);
-    visitaProfundidadeSmuT(smuVertices, printEsquinasSVG, &ssvg2);
+    percorrerHashTable(quadras, inserirQuadrasSVG2, ssvg2);
+    //printf("saiu percorrer hashtable\n");
+    visitaProfundidadeSmuT(smuVertices, printEsquinasSVG, ssvg2);
+    //printf("saiu visitaProfundidade\n");
 
     LeituraCompletaQry(arqqry, &stxt, &ssvg2, g, smuVertices, quadras, enderecos, percursos, arestasN);
 

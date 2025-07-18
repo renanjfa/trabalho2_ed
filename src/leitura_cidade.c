@@ -8,7 +8,7 @@
 #include "svg.h"
 #include "tratar_strings.h"
 
-#define MAX_SIZE 10000
+#define MAX_SIZE 1024
 
 
 int quantidadeQuadras(FILE *arqcidade) {
@@ -39,16 +39,21 @@ HashTable LeituraCompletaCidade(FILE **svg1, FILE *arqcidade, HashTable ht) {
     char corp[300], corb[300], nome[300], sw[300], comando[10];
 
     Estilo ts = criarEstilo("sans", "b", "12px");
+    strcpy(sw, "1.0px");
+    strcpy(corp, "white");
+    strcpy(corb, "black");
 
     char linha[MAX_SIZE];
     char aux[MAX_SIZE];
 
-    while(leituraLinha(arqcidade, linha, MAX_SIZE)) {
-
+    while(fgets(linha, MAX_SIZE, arqcidade)) {
+        linha[strcspn(linha, "\r\n")] = '\0';
+        if (linha[0] == '\0' || linha[0] == '\n') continue;
         aux[0] = '\0';
         comando[0] = '\0';
         strcpy(aux, linha);
         sscanf(aux, "%s", comando);
+
 
         if(strcmp(comando, "cq") == 0) {
             sscanf(aux, "%s %s %s %s", comando, sw, corp, corb);
@@ -93,8 +98,11 @@ HashTable ProcessaCidade(const char *pathcidade, const char *dirsaida, const cha
     printSVGCabecalho(svg1);
 
     int qntQuadras = quantidadeQuadras(arqcidade);
+
     rewind(arqcidade);
     HashTable ht = createHashTable(qntQuadras);
+
+
 
     ht = LeituraCompletaCidade(&svg1, arqcidade, ht);
 

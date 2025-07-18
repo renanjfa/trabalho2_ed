@@ -28,6 +28,10 @@ typedef struct stPercurso {
 
 void calcularCoordenadaEndereco(Endereco e, HashTable quadras, double *x, double *y) {
     Quadra q = buscaHashTable(quadras, getNomeQuadraEndereco(e));
+    if(!q) {
+        printf("[ERRO] q null\n");
+        return;
+    }
 
     double ancx = getXQuadra(q);
     double ancy = getYQuadra(q);
