@@ -54,7 +54,6 @@ HashTable LeituraCompletaCidade(FILE **svg1, FILE *arqcidade, HashTable ht) {
         strcpy(aux, linha);
         sscanf(aux, "%s", comando);
 
-
         if(strcmp(comando, "cq") == 0) {
             sscanf(aux, "%s %s %s %s", comando, sw, corp, corb);
         }
@@ -98,11 +97,8 @@ HashTable ProcessaCidade(const char *pathcidade, const char *dirsaida, const cha
     printSVGCabecalho(svg1);
 
     int qntQuadras = quantidadeQuadras(arqcidade);
-
     rewind(arqcidade);
     HashTable ht = createHashTable(qntQuadras);
-
-
 
     ht = LeituraCompletaCidade(&svg1, arqcidade, ht);
 
