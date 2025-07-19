@@ -44,25 +44,87 @@ void insertHashTable(HashTable tabela, char *key, ConteudoHashNode valor) {
     int idx = hash(key, ht->tamanho);
 
     stHashNode novo = malloc(sizeof(stHN));
-    novo->key = strdup(key);
+    novo->key = malloc(strlen(key) + 1);
+    if (!novo->key) {
+        fprintf(stderr, "[ERRO] malloc falhou para chave: %s\n", key);
+        exit(1);
+    }
+    strcpy(novo->key, key);
+    if (novo->key == NULL) {
+        fprintf(stderr, "[ERRO] Falha ao duplicar string: %s\n", key);
+        exit(1);
+    }
     novo->value = valor;
     novo->proximo = ht->buckets[idx];
     ht->buckets[idx] = novo;
 }
 
-ConteudoHashNode buscaHashTable(HashTable tabela, char *key) {
-    stHashTable *ht = (stHashTable *)tabela;
 
-    int idx = hash(key, ht->tamanho);
 
-    stHashNode atual = ht->buckets[idx];
+// ConteudoHashNode buscaHashTable(HashTable ht, char *key) {
+//     if (ht == NULL) {
+//         fprintf(stderr, "[ERRO] HashTable NULL!\n");
+//         exit(1);
+//     }
+
+//     int idx = hash(key, ((stHashTable*)ht)->tamanho);
+
+//     stHashNode atual = ((stHashTable*)ht)->buckets[idx];
+
+
+//     while (atual) {
+
+//         if(atual->key != NULL && !key) {
+
+    
+//             if (strcmp(atual->key, key) == 0)
+//                 return atual->value;
+    
+//             atual = atual->proximo;
+//         } else {
+//             atual = atual->proximo;
+//         }
+//     }
+
+//     return NULL;
+// }
+
+
+
+ConteudoHashNode buscaHashTable(HashTable ht, char *key) {
+    if (ht == NULL || key == NULL) {
+        fprintf(stderr, "[ERRO] HashTable ou chave NULL!\n");
+        exit(1);
+    }
+
+    int idx = hash(key, ((stHashTable*)ht)->tamanho);
+    stHashNode atual = ((stHashTable*)ht)->buckets[idx];
+
+    //printf("atual->key: %s\tkey: %s\n", atual->key, key);
+
     while (atual) {
-        if (strcmp(atual->key, key) == 0)
+        if (atual->key && strcmp(atual->key, key) == 0) {
+            //printf("retornando atual->value\n");
             return atual->value;
+        }
+
         atual = atual->proximo;
     }
+
     return NULL;
 }
+
+int getOrCreateNode(HashTable tabela, char *key, int *proxId) {
+    ConteudoHashNode resultado = buscaHashTable(tabela, key);
+    if (resultado != NULL)
+        return (int)(long)resultado;
+
+    int novo = *proxId;
+    insertHashTable(tabela, key, (void*)(long)novo);
+    (*proxId)++;
+    return novo;
+}
+
 
 void destroiHashTable(HashTable tabela, void (*liberaValor)(ConteudoHashNode)) {
     stHashTable *ht = (stHashTable *)tabela;
@@ -80,18 +142,6 @@ void destroiHashTable(HashTable tabela, void (*liberaValor)(ConteudoHashNode)) {
     }
     free(ht->buckets);
     free(ht);
-}
-
-
-int getOrCreateNode(HashTable tabela, char *key, int *proxId) {
-    ConteudoHashNode resultado = buscaHashTable(tabela, key);
-
-    if (resultado != NULL)
-        return (int)(long)resultado;
-
-    int novo = (*proxId)++;
-    insertHashTable(tabela, key, (void *)(long)novo);
-    return novo;
 }
 
 void percorrerHashTable(HashTable ht, Callback c, void *extra) {

@@ -47,6 +47,9 @@ typedef bool (*dfsRestarted)(Graph g, void *extra);
 
 typedef double (*FuncCusto)(Info dados);
 
+void printGraph(Graph g, FuncCusto extraiPeso);
+
+
 
 
 /*
@@ -193,7 +196,7 @@ void  getNodeNames(Graph g, Lista nomesNodes);
 void getEdges(Graph g, Lista arestas);
 
 
-double* dijkstraA(Graph g, Node to, Node from, int **predecessores, FuncCusto calcularCusto);
+void dijkstra(Graph g, char *origem, char *destino, int* caminho, int* tamCaminho, FuncCusto extraiPeso);
 
 /*
    Faz percurso em profundidade sobre  g, a partir do no' node, classificando 
