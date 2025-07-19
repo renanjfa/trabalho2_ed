@@ -16,7 +16,7 @@ void dren(FILE* txt, Graph g, int n, Lista *arestasN);
 
 void sg(char *nome, double x, double y, double w, double h);
 
-void registrarPercurso(char *np, char *nome, char *reg1, char *reg2);
+void registrarPercurso(FILE* svg, Graph g, HashTable enderecos, HashTable percursos, char *np, char *nome, char *reg1, char *reg2);
 
 void join(char *np, char *np1, char *np2);
 
