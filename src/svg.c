@@ -11,10 +11,10 @@
 #include "registradores.h"
 
 // c2 = (0 0 10500 3500)
-// c1 = (0 0 1000 1000)
+// c1 = (0 0 1700 1200)
 void printSVGCabecalho(FILE *svg) {
     fprintf(svg, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-    fprintf(svg, "<svg viewBox=\"0 0 1200 1200\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"1.1\">\n");
+    fprintf(svg, "<svg viewBox=\"0 0 10500 3500\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" version=\"1.1\">\n");
 }
 
 void fecharSVG(FILE *svg) {
@@ -70,7 +70,7 @@ void printPathCMCSVG(FILE *svg, Percurso p, char *nomepath) {
     }
 
     strcat(nomepath, "cmc");
-    fprintf(svg, "\" id=\"%s\" />", nomepath);
+    fprintf(svg, "\" id=\"%s\" fill=\"none\" stroke=\"none\" />", nomepath);
 }
 
 void printPathCMRSVG(FILE *svg, Percurso p, char *nomepath) {
@@ -89,11 +89,11 @@ void printPathCMRSVG(FILE *svg, Percurso p, char *nomepath) {
     }
 
     strcat(nomepath, "cmr");
-    fprintf(svg, "\" id=\"%s\" />", nomepath);
+    fprintf(svg, "\" id=\"%s\" fill=\"none\" stroke=\"none\" />", nomepath);
 }
 
 void printAnimationSVG(FILE *svg, char *idpath) {
-    fprintf(svg, "<g fill-rule=\"evenodd\" clip-rule=\"evenodd\" transform=\"scale(0.05) translate(-96,-96)\">\n");
+    fprintf(svg, "<g transform=\"scale(0.12) translate(-96,-96)\">\n");
 
     fprintf(svg, "  <path d=\"M22.509 184.252zm74.063-.301c-22.804-8.9-41.099-21.232-53.867-38.307-13.264-17.771-19.808-40.633-19.808-72.482V8.504h147.35v64.658c0 31.849-6.543 54.71-19.807 72.482-12.77 17.075-31.065 29.407-53.868 38.307z\"/>\n");
     fprintf(svg, "  <path d=\"M96.572 178.891c-10.238-4.102-19.575-8.9-27.865-14.688h55.729c-8.29 5.787-17.625 10.586-27.864 14.688zm-49.563-35.514c-4.393-5.904-8.086-12.508-11.053-19.895h121.231c-2.967 7.387-6.66 13.99-11.053 19.895H47.009zm-17.423-43.076c-1.018-6.051-1.658-12.508-1.92-19.401h137.781c-.232 6.894-.873 13.351-1.891 19.401H29.586zm69.43-64.689h66.578v22.833H99.016V35.612zM27.55 13.187h66.782v63.03H27.55v-63.03z\" fill=\"#cd3529\"/>\n");
