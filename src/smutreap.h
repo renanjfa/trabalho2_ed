@@ -160,6 +160,9 @@ Info getBoundingBoxSmuT(SmuTreap t, SmuNode n, double *x, double *y, double *w, 
  */
 
 
+Info getInfoMaisProximoRaioSmuT(SmuTreap t, double x, double y, double d, FdentroDeRegiao f);
+
+
 
 bool getNodesDentroRegiaoSmuT(SmuTreap t, double x1, double y1, double x2, double y2, Lista L);    
 /* Insere na lista L os nos (Node) da arvore t cujas ancoras estao dentro da regiao 

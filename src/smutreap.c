@@ -696,3 +696,39 @@ void visitaLarguraSmuT(SmuTreap t, FvisitaNo f, void *aux) {
 }
 
 
+
+
+Info getInfoMaisProximoRaioSmuT(SmuTreap t, double x, double y, double d, FdentroDeRegiao f) {
+    if(!t) return NULL;
+
+    double ancx, ancy, w, h;
+    ancx = x - d;
+    ancy = y - d;
+    w = 2*d;
+    h = 2*d;
+
+    Lista proximos = criaLista();
+    double dist = -1.0;
+    SmuNode mais_perto;
+    if(getInfosDentroRegiaoSmuT(t, ancx, ancy, w, h, f, proximos)) {
+
+        for(Celula p = getInicioLista(proximos); p!=NULL; p = getProxCelula(p)) {
+
+            SmuNode smunode = getConteudoCelula(p);
+
+            double x1 = ((stNode*)smunode)->anc.x;
+            double y1 = ((stNode*)smunode)->anc.y;
+
+            double dist_atual = sqrt( (x1-x)*(x1-x) + (y1-y)*(y1-y) );
+
+            if(dist < 0 || dist_atual < dist) {
+                dist = dist_atual;
+                mais_perto = smunode;
+            }
+        }
+    }
+
+    return getInfoSmuT(t, mais_perto);
+}
+
+
