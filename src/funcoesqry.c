@@ -43,16 +43,25 @@ void registrarEndereco(FILE* svg, FILE* txt, HashTable enderecos, HashTable quad
 
 void shw(FILE* svg, char *np, char *cmc, char *cmr, HashTable percursos) {
 
+    printf("entrada shw\n");
     Percurso p = buscaHashTable(percursos, np);
+    printf("saiu buscahash\n");
+    if(!p) {
+        printf("percurso null\n");
+    }
 
     Lista path_cmc = getPathCMCPercurso(p);
+    printf("lista cmc\n");
 
     for(Celula p = getInicioLista(path_cmc); getProxCelula(p) != NULL && p != NULL; p = getProxCelula(p)) {
         Coordenadas inicio = getConteudoCelula(p);
         Coordenadas fim = getConteudoCelula(getProxCelula(p));
 
-        Linha l1 = criarLinha(27, getXCoord(inicio), getYCoord(inicio), getXCoord(fim), getYCoord(fim), cmc, false);
+        Linha l1 = criarLinha(27, getXCoord(inicio)+3, getYCoord(inicio)+3, getXCoord(fim)+3, getYCoord(fim)+3, cmc, false);
+        setSWLinha(l1, 6);
+        insertLineSVG(svg, l1);
     }
+    printf("saiu loop print linhas path cmc\n");
 
 
     Lista path_cmr = getPathCMRPercurso(p);
@@ -61,10 +70,27 @@ void shw(FILE* svg, char *np, char *cmc, char *cmr, HashTable percursos) {
         Coordenadas inicio = getConteudoCelula(p);
         Coordenadas fim = getConteudoCelula(getProxCelula(p));
 
-        Linha l1 = criarLinha(27, getXCoord(inicio), getYCoord(inicio), getXCoord(fim), getYCoord(fim), cmr, false);
+        Linha l2 = criarLinha(27, getXCoord(inicio), getYCoord(inicio), getXCoord(fim), getYCoord(fim), cmr, false);
+        setSWLinha(l2, 6);
+        insertLineSVG(svg, l2);
     }
 
-    printAnimationSVG(svg, getNomePercurso(p));
+    printf("saiu loop print linhas path cmc\n");
+
+
+    char *path_name_cmc = malloc((strlen(np)+5) * sizeof(char));
+    char *path_name_cmr = malloc((strlen(np)+5) * sizeof(char));
+
+    strcat(path_name_cmc, "cmc");
+    strcat(path_name_cmr, "cmr");
+
+    printPathCMCSVG(svg, p, path_name_cmc);
+    printPathCMRSVG(svg, p, path_name_cmr);
+
+    printAnimationSVG(svg, path_name_cmc);
+    printAnimationSVG(svg, path_name_cmr);
+
+    printf("saida shw\n");
 }
 
 
@@ -136,35 +162,65 @@ double extraiComprimento(Rua r) {
 }
 
 double extraiVelocidade(Rua r) {
-    return getVelocidadeRua(r);
+    return getComprimentoRua(r)/getVelocidadeRua(r);
 }
 
-void registrarPercurso(FILE* svg, Graph g, HashTable enderecos, HashTable percursos, char *np, char *nome, char *reg1, char *reg2) {
+void registrarPercurso(FILE* svg, Graph g, SmuTreap t, HashTable enderecos, HashTable percursos, char *np, char *nome, char *reg1, char *reg2) {
+    
+    printf("entrada p?\n");
     Endereco origem = buscaHashTable(enderecos, reg1);
     Endereco destino = buscaHashTable(enderecos, reg2);
-    printf("oi p?\n");
 
-    Percurso p = createPercurso(np, getNomeQuadraEndereco(origem), getNomeQuadraEndereco(destino));
+    Esquina e1 = getInfoMaisProximoRaioSmuT(t, getXEndereco(origem), getYEndereco(origem), 50, BBinternoRegiao);
+    Esquina e2 = getInfoMaisProximoRaioSmuT(t, getXEndereco(destino), getYEndereco(destino), 50, BBinternoRegiao);
 
-    int *caminho = malloc(getTotalNodes(g) * sizeof(int));
-    int tamCaminho;
+    Percurso p = createPercurso(np, getNomeEsquina(e1), getNomeEsquina(e2));
+    insertHashTable(percursos, np, p);
 
-    dijkstra(g, getNomeQuadraEndereco(origem), getNomeQuadraEndereco(destino), caminho, &tamCaminho, extraiComprimento);
 
-    for(int i = 0; i<tamCaminho; i++) {
+    int *cmc = malloc(getTotalNodes(g) * sizeof(int));
+    int *cmr = malloc(getTotalNodes(g) * sizeof(int));
+    int tam_cmc;
+    int tam_cmr;
 
-        printf("%d ", caminho[i]);
-        Esquina e = getNodeInfo(g, caminho[i]);
+    printGraph(g, extraiComprimento);
+
+    dijkstra(g, getNomeEsquina(e1), getNomeEsquina(e2), cmc, &tam_cmc, extraiComprimento);
+    dijkstra(g, getNomeEsquina(e1), getNomeEsquina(e2), cmr, &tam_cmr, extraiVelocidade);
+
+    for(int i = 0; i<tam_cmc; i++) {
+
+        printf("%d ", cmc[i]);
+        Esquina e = getNodeInfo(g, cmc[i]);
 
         Coordenadas c = createCoordenadas(getXEsquina(e), getYEsquina(e));
         insertPathCMCPercurso(p, c);
     }
     printf("\n");
 
-    insertHashTable(percursos, np, p);
+    for(int i = 0; i<tam_cmr; i++) {
+
+        printf("%d ", cmr[i]);
+        Esquina e = getNodeInfo(g, cmr[i]);
+
+        Coordenadas c = createCoordenadas(getXEsquina(e), getYEsquina(e));
+        insertPathCMRPercurso(p, c);
+    }
+    printf("\n");
 
     printPathCMCSVG(svg, p, np);
 
-    printAnimationSVG(svg, np);
+
+
+    printf("saida p?\n");
 }
+
+
+// void join(FILE* svg, Graph g, SmuTreap t, HashTable percursos, HashTable enderecos, char *np, char *np1, char *np2) {
+
+    
+
+
+// }
+
 
