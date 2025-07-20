@@ -65,7 +65,7 @@ void LeituraCompletaQry(FILE* arqQry, FILE **txt, FILE **svg2, Graph g, SmuTreap
 
         else if(strcmp(comando, "sg") == 0) {
             sscanf(aux, "%s %s %lf %lf %lf %lf", comando, nome, &x, &y, &w, &h);
-            // sg(nome, x, y, w, h);
+            sg(*svg2, g, smuVertices, nome, x, y, w, h);
         }
 
         else if(strcmp(comando, "p?") == 0) {

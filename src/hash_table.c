@@ -126,7 +126,7 @@ int getOrCreateNode(HashTable tabela, char *key, int *proxId) {
 }
 
 
-void destroiHashTable(HashTable tabela, void (*liberaValor)(ConteudoHashNode)) {
+void destroiHashTable(HashTable tabela) {
     stHashTable *ht = (stHashTable *)tabela;
 
     for (int i = 0; i < ht->tamanho; i++) {
@@ -134,8 +134,6 @@ void destroiHashTable(HashTable tabela, void (*liberaValor)(ConteudoHashNode)) {
         while (atual) {
             stHashNode prox = atual->proximo;
             free(atual->key);
-            if (liberaValor)
-                liberaValor(atual->value);
             free(atual);
             atual = prox;
         }

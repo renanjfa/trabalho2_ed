@@ -38,7 +38,7 @@ Graph LeituraCompletaVia(FILE *arqvia, SmuTreap t) {
 
             Esquina eq = createEsquina(id, x, y);
 
-            addNode(g, id, eq);
+            addNode(g, id, x, y, eq);
 
             insertSmuT(t, x, y, eq, 5, calculaBoundingBoxEsquina);
         }

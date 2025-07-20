@@ -20,7 +20,7 @@ int getOrCreateNode(HashTable tabela, char *key, int *proxId);
 
 
 
-void destroiHashTable(HashTable tabela, void (*liberaValor)(ConteudoHashNode));
+void destroiHashTable(HashTable tabela);
 
 
 #endif

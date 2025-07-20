@@ -170,7 +170,7 @@ bool getNodesDentroRegiaoSmuT(SmuTreap t, double x1, double y1, double x2, doubl
    Retorna falso, caso nao existam nos dentro da regiao; verdadeiro, caso contrario.
  */
 
-bool getInfosDentroRegiaoSmuT(SmuTreap t, double x1, double y1, double x2, double y2, FdentroDeRegiao f, Lista L);     
+bool getInfosDentroRegiaoSmuT(SmuTreap t, double x1, double y1, double w, double h, FdentroDeRegiao f, Lista L);     
 /* Insere na lista L os nos cujas respectivas informacoes associadas estao inteiramente dentro da regiao
    delimitada pelos pontos (x1,y1) e (x2,y2). A funcao f e' usada para determinar se uma
    informacao armazenada na arvore esta' dentro da regiao.
