@@ -75,7 +75,7 @@ void LeituraCompletaQry(FILE* arqQry, FILE **txt, FILE **svg2, Graph g, SmuTreap
 
         else if(strcmp(comando, "join") == 0) {
             sscanf(aux, "%s %s %s %s", comando, np, np1, np2);
-            // join(np, np1, np2);
+            join(*svg2, g, smuVertices, percursos, enderecos, np, np1, np2);
         }
 
         else if(strcmp(comando, "shw") == 0) {

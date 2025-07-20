@@ -103,7 +103,7 @@ void printAnimationSVG(FILE *svg, char *idpath) {
     fprintf(svg, "          <mpath xlink:href=\"#%s\"/>\n", idpath);
     fprintf(svg, "      </animateMotion>\n");
 
-    fprintf(svg, "</g>");
+    fprintf(svg, "</g>\n");
 }
 
 
