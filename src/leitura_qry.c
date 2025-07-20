@@ -70,7 +70,7 @@ void LeituraCompletaQry(FILE* arqQry, FILE **txt, FILE **svg2, Graph g, SmuTreap
 
         else if(strcmp(comando, "p?") == 0) {
             sscanf(aux, "%s %s %s %s %s", comando, np, nome, reg1, reg2);
-            registrarPercurso(*svg2, g, enderecos, percursos, np, nome, reg1, reg2);
+            registrarPercurso(*svg2, g, smuVertices, enderecos, percursos, np, nome, reg1, reg2);
         }
 
         else if(strcmp(comando, "join") == 0) {

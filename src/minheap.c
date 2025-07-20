@@ -55,14 +55,29 @@ void insertMinHeapAux(MinHeap h, int index) {
 }
 
 void insertMinHeap(MinHeap h, int v, double dist) {
-    if(((stHeap*)h)->size < ((stHeap*)h)->capacidade) {
+    stHeap* heap = (stHeap*)h;
+    
+    if(heap->size >= heap->capacidade) {
+        return;  // Heap cheia
+    }
 
-        ((stHeap*)h)->arr[ ((stHeap*)h)->size ].v = v;
-        ((stHeap*)h)->arr[ ((stHeap*)h)->size ].dist = dist;
-        ((stHeap*)h)->pos[v] = ((stHeap*)h)->size;
+    // Insere no final
+    int i = heap->size;
+    heap->arr[i].v = v;
+    heap->arr[i].dist = dist;
+    heap->pos[v] = i;
+    heap->size++;
 
-        ((stHeap*)h)->size++;
-        insertMinHeapAux(h, ((stHeap*)h)->size);
+    // Corrige a heap subindo
+    while (i > 0 && heap->arr[i].dist < heap->arr[(i-1)/2].dist) {
+        int pai = (i-1)/2;
+        
+        // Atualiza posições
+        heap->pos[heap->arr[i].v] = pai;
+        heap->pos[heap->arr[pai].v] = i;
+        
+        swapHeap(&heap->arr[i], &heap->arr[pai]);
+        i = pai;
     }
 }
 
@@ -91,23 +106,25 @@ void minHeapify(MinHeap h, int index) {
 
 
 int extractMinV(MinHeap h) {
-
-    if(((stHeap*)h)->size == 0) {
-        printf("Heap id empty.\n");
-        return;
+    stHeap* heap = (stHeap*)h;
+    
+    if(heap->size == 0) {
+        return -1;  // Valor inválido para indicar heap vazia
     }
 
-    ItemHeap root = ((stHeap*)h)->arr[0];
-    ItemHeap last = ((stHeap*)h)->arr[((stHeap*)h)->size - 1];
+    int root = heap->arr[0].v;
+    heap->pos[root] = -1;  // Marca como removido
 
-    ((stHeap*)h)->arr[0] = last;
-    ((stHeap*)h)->pos[last.v] = 0;
-    ((stHeap*)h)->pos[root.v] = -1;
+    // Move o último elemento para a raiz
+    if(heap->size > 1) {
+        heap->arr[0] = heap->arr[heap->size-1];
+        heap->pos[heap->arr[0].v] = 0;
+    }
 
-    ((stHeap*)h)->size--;
+    heap->size--;
     minHeapify(h, 0);
 
-    return root.v;
+    return root;
 }
 
 double extractMinDist(MinHeap h) {
@@ -138,23 +155,32 @@ bool isMinHeapEmpty(MinHeap h) {
 }
 
 void atualizaMinHeap(MinHeap h, int v, double novaDist) {
-    stHeap *heap = (stHeap*)h;
+    stHeap* heap = (stHeap*)h;
     int i = heap->pos[v];
 
-    if (i < 0 || i >= heap->size) return;
+    if(i == -1) {
+        // Se o elemento não está na heap, insere
+        insertMinHeap(h, v, novaDist);
+        return;
+    }
 
+    double oldDist = heap->arr[i].dist;
     heap->arr[i].dist = novaDist;
 
-    // Sobe o elemento se necessário
-    while (i > 0 && heap->arr[i].dist < heap->arr[(i - 1) / 2].dist) {
-        int pai = (i - 1) / 2;
-
-        // atualiza pos[]
-        heap->pos[heap->arr[i].v] = pai;
-        heap->pos[heap->arr[pai].v] = i;
-
-        swapHeap(&heap->arr[i], &heap->arr[pai]);
-        i = pai;
+    if(novaDist < oldDist) {
+        // Se a distância diminuiu, sobe na heap
+        while (i > 0 && heap->arr[i].dist < heap->arr[(i-1)/2].dist) {
+            int pai = (i-1)/2;
+            
+            heap->pos[heap->arr[i].v] = pai;
+            heap->pos[heap->arr[pai].v] = i;
+            
+            swapHeap(&heap->arr[i], &heap->arr[pai]);
+            i = pai;
+        }
+    } else if(novaDist > oldDist) {
+        // Se a distância aumentou, desce na heap
+        minHeapify(h, i);
     }
 }
 

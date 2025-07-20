@@ -364,6 +364,8 @@ Node addNode(Graph g, char *nome, Info info) {
 void dijkstra(Graph g, char *nomeOrigem, char *nomeDestino, int* caminho, int* tamCaminho, FuncCusto extraiPeso) {
     if(!g || !caminho) return;
 
+    printf("DIJKSTRA:\n");
+
     int n = getTotalNodes(g);
     double* dist = malloc(n * sizeof(double));
     int* anterior = malloc(n * sizeof(int));
@@ -377,12 +379,17 @@ void dijkstra(Graph g, char *nomeOrigem, char *nomeDestino, int* caminho, int* t
     Node destino = getNode(g, nomeDestino);
 
     MinHeap heap = createMinHeap(n);
+    for (int i = 0; i < n; i++) {
+        insertMinHeap(heap, i, dist[i]); // Insere todos, mas a heap prioriza os menores
+    }
     dist[origem] = 0.0;
-    insertMinHeap(heap, origem, 0.0);
+    atualizaMinHeap(heap, origem, 0.0);
     
 
     while (!isMinHeapEmpty(heap)) {
         int u = extractMinV(heap);
+        //printf("Extraindo nó %d (dist = %.2lf)\n", u, dist[u]);
+
 
         for (Celula p = getInicioLista( ((stGraph*)g)->vertices[u]->adjacentes ); p != NULL; p = getProxCelula(p)) {
 
@@ -390,19 +397,24 @@ void dijkstra(Graph g, char *nomeOrigem, char *nomeDestino, int* caminho, int* t
             if(isHabilitadaEdge(g, e)) {
 
                 Node v = getToNode(g, e);
+                //printf("v = %d (getToNode)\n", v);
     
                 double peso = extraiPeso(getEdgeInfo(g, e)); 
-    
+                //printf("  Verificando aresta %d -> %d (peso = %.2f)\n", u, v, peso);
+                //printf("  dist[u] = %.2f, dist[v] = %.2f\n", dist[u], dist[v]);
                 //printf("u = %d, v = %d, dist[u] = %.2f, peso = %.2f, dist[v] = %.2f\n", u, v, dist[u], peso, dist[v]);
     
                 if (dist[u] + peso < dist[v]) {
+                    //printf("  Atualizando dist[%d] para %.2f\n", v, dist[u] + peso);
                     dist[v] = dist[u] + peso;
                     anterior[v] = u;
                     //printf("Atualizando dist[%d]: %.2f -> %.2f (via %d)\n", v, dist[v], dist[u] + peso, u);
     
                     if (estaNaHeap(heap, v)) {
+                        //printf("    Atualizando heap para nó %d\n", v);
                         atualizaMinHeap(heap, v, dist[v]);
                     } else {
+                    //printf("    Inserindo nó %d na heap\n", v);
                         insertMinHeap(heap, v, dist[v]);
                     }
                 }
@@ -452,6 +464,7 @@ void printGraph(Graph g, FuncCusto extraiPeso) {
         for (Celula p = getInicioLista(adj); p != NULL; p = getProxCelula(p)) {
             Edge e = getConteudoCelula(p);
             Node to = getToNode(g, e);
+            Node from = getFromNode(g, e);
             Info info = getEdgeInfo(g, e);
             double peso = extraiPeso(info);
             printf(" [%d (peso: %.2f)]", to, peso);

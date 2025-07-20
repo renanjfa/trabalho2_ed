@@ -28,7 +28,10 @@ typedef struct stPercurso {
 
 void calcularCoordenadaEndereco(Endereco e, HashTable quadras, double *x, double *y) {
     Quadra q = buscaHashTable(quadras, getNomeQuadraEndereco(e));
-    if(!q) return;
+    if(!q) {
+        printf("Quadra nao encontrada em quadras\n");
+        return;
+    }
 
     double ancx = getXQuadra(q);
     double ancy = getYQuadra(q);
