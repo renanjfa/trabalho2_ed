@@ -19,7 +19,7 @@ void registrarEndereco(FILE* svg, FILE* txt, HashTable enderecos, HashTable quad
     x = getXEndereco(e);
     y = getYEndereco(e);
 
-    fprintf(txt, "Coordenada do endereco: (%.3lf, %.3lf)\n", x, y);
+    fprintf(txt, "Coordenada do endereco: (%.3lf, %.3lf)\n\n", x, y);
 
     Linha l1 = criarLinha(27, 30, y, x, y, "red", true);
     Linha l2 = criarLinha(27, x, 30, x, y, "red", true);
@@ -98,7 +98,7 @@ void shw(FILE* svg, char *np, char *cmc, char *cmr, HashTable percursos) {
 
 
 
-void desabilitarArestasAlagadas(Graph g, Lista arestas, FILE* svg) {
+void desabilitarArestasAlagadas(Graph g, Lista arestas, FILE* svg, FILE* txt) {
     if(!g || !arestas) return;
     double x1, y1, x2, y2;
 
@@ -108,7 +108,6 @@ void desabilitarArestasAlagadas(Graph g, Lista arestas, FILE* svg) {
 
         Node idx_from = getFromNode(g, e);
         Node idx_to = getToNode(g, e);
-        //printf("idx_from = %d\tidx_to = %d\n");
         
         Esquina eq_from = getNodeInfo(g, idx_from);
         Esquina eq_to = getNodeInfo(g, idx_to);
@@ -116,21 +115,25 @@ void desabilitarArestasAlagadas(Graph g, Lista arestas, FILE* svg) {
         x1 = getXEsquina(eq_from); y1 = getYEsquina(eq_from);
         x2 = getXEsquina(eq_to); y2 = getYEsquina(eq_to);
 
-        //printf("LinhaEdge => %s -> %s \nx1: %.2lf\ty1: %.2lf\tx2: %.2lf\ty2: %.2lf\n", getNomeEsquina(eq_from), getNomeEsquina(eq_to), x1, y1, x2, y2);
 
-        Linha l = criarLinha(27, x1, y1, x2, y2, "green", false);
+        Linha l = criarLinha(27, x1, y1, x2, y2, "black", false);
         insertLineSVG(svg, l);
 
         setHabilitadaEdge(g, e, false);
 
+        Rua r = getEdgeInfo(g, e);
+
+        fprintf(txt, "Aresta Desabilitada:\n");
+        fprintf(txt, "%s -> %s Lados: %s(DIR) %s(ESQ) Comp: %.2lf VelocM: %.2lf NomeRua: %s\n", getNomeEsquina(eq_from), getNomeEsquina(eq_to), getLDIRRua(r), getLESQRua(r), getComprimentoRua(r), getVelocidadeRua(r), getNomeRUa(r));
     }
+    fprintf(txt, "\n");
 }
 
 // reportar svg e txt
 void alag(FILE* svg, FILE* txt, Graph g, SmuTreap t, int n, double x, double y, double w, double h, Lista *arestasN) {
     Lista esquinas_alagadas = criaLista(); // esquinas alagadas
 
-    Retangulo r = criarRetangulo(27, x, y, w, h, "red", "red");
+    Retangulo r = criarRetangulo(27, x, y, w, h, "#AA0044", "#AB37C8");
     insertRectSVG(svg, r);
 
     if(getInfosDentroRegiaoSmuT(t, x, y, w, h, BBinternoRegiao, esquinas_alagadas)) {
@@ -145,7 +148,7 @@ void alag(FILE* svg, FILE* txt, Graph g, SmuTreap t, int n, double x, double y, 
         }
     }
 
-    desabilitarArestasAlagadas(g, arestasN[n], svg);
+    desabilitarArestasAlagadas(g, arestasN[n], svg, txt);
 }
 
 // reportar svg e txt
@@ -156,7 +159,18 @@ void dren(FILE *txt, Graph g, int n, Lista *arestasN) {
         Edge e = getConteudoCelula(p);
         setHabilitadaEdge(g, e, true);
 
+        Node idx_from = getFromNode(g, e);
+        Node idx_to = getToNode(g, e);
+        
+        Esquina eq_from = getNodeInfo(g, idx_from);
+        Esquina eq_to = getNodeInfo(g, idx_to);
+
+        Rua r = getEdgeInfo(g, e);
+
+        fprintf(txt, "Aresta Reabilitada:\n");
+        fprintf(txt, "%s -> %s Lados: %s(DIR) %s(ESQ) Comp: %.2lf VelocM: %.2lf NomeRua: %s\n", getNomeEsquina(eq_from), getNomeEsquina(eq_to), getLDIRRua(r), getLESQRua(r), getComprimentoRua(r), getVelocidadeRua(r), getNomeRUa(r));
     }
+    fprintf(txt, "\n");
 }
 
 
@@ -168,9 +182,10 @@ double extraiVelocidade(Rua r) {
     return getComprimentoRua(r)/getVelocidadeRua(r);
 }
 
-void registrarPercurso(FILE* svg, Graph g, SmuTreap t, HashTable enderecos, HashTable percursos, char *np, char *nome, char *reg1, char *reg2) {
+void registrarPercurso(FILE* txt, Graph g, SmuTreap t, HashTable enderecos, HashTable percursos, char *np, char *nome, char *reg1, char *reg2) {
     
     printf("entrada p?\n");
+    fprintf(txt, "Percurso %s:\n", np);
     Endereco origem = buscaHashTable(enderecos, reg1);
     Endereco destino = buscaHashTable(enderecos, reg2);
 
@@ -191,33 +206,40 @@ void registrarPercurso(FILE* svg, Graph g, SmuTreap t, HashTable enderecos, Hash
     dijkstra(g, getNomeEsquina(e2), getNomeEsquina(e1), cmc, &tam_cmc, extraiComprimento);
     dijkstra(g, getNomeEsquina(e2), getNomeEsquina(e1), cmr, &tam_cmr, extraiVelocidade);
 
+    fprintf(txt, "Caminho Mais Curto (CMC): ");
     for(int i = 0; i<tam_cmc; i++) {
 
         printf("%d ", cmc[i]);
         Esquina e = getNodeInfo(g, cmc[i]);
 
         Coordenadas c = createCoordenadas(getXEsquina(e), getYEsquina(e));
+        fprintf(txt, "(%.2lf, %.2lf) ", getXEsquina(e), getYEsquina(e));
         insertPathCMCPercurso(p, c);
     }
+    fprintf(txt, "\n");
     printf("\n");
 
+    fprintf(txt, "Caminho Mais Rapido (CMR): ");
     for(int i = 0; i<tam_cmr; i++) {
 
         printf("%d ", cmr[i]);
         Esquina e = getNodeInfo(g, cmr[i]);
 
         Coordenadas c = createCoordenadas(getXEsquina(e), getYEsquina(e));
+        fprintf(txt, "(%.2lf, %.2lf) ", getXEsquina(e), getYEsquina(e));
         insertPathCMRPercurso(p, c);
     }
     printf("\n");
+    fprintf(txt, "\n\n");
 
     printf("saida p?\n");
 }
 
 
-void join(FILE* svg, Graph g, SmuTreap t, HashTable percursos, HashTable enderecos, char *np, char *np1, char *np2) {
+void join(FILE* txt, Graph g, SmuTreap t, HashTable percursos, HashTable enderecos, char *np, char *np1, char *np2) {
 
     printf("\nentrou join\n");
+    fprintf(txt, "Percurso %s (%s e %s):\n", np, np1, np2);
 
     Percurso p1 = buscaHashTable(percursos, np1);
     Percurso p2 = buscaHashTable(percursos, np2);
@@ -239,25 +261,31 @@ void join(FILE* svg, Graph g, SmuTreap t, HashTable percursos, HashTable enderec
     dijkstra(g, getNomeEsquina(eq2), getNomeEsquina(eq1), cmc, &tam_cmc, extraiComprimento);
     dijkstra(g, getNomeEsquina(eq2), getNomeEsquina(eq1), cmr, &tam_cmr, extraiVelocidade);
 
+    fprintf(txt, "Caminho Mais Curto (CMC): ");
     for(int i = 0; i<tam_cmc; i++) {
 
         printf("%d ", cmc[i]);
         Esquina e = getNodeInfo(g, cmc[i]);
 
         Coordenadas c = createCoordenadas(getXEsquina(e), getYEsquina(e));
+        fprintf(txt, "(%.2lf, %.2lf) ", getXEsquina(e), getYEsquina(e));
         insertPathCMCPercurso(p, c);
     }
     printf("\n");
+    fprintf(txt, "\n");
 
+    fprintf(txt, "Caminho Mais Curto (CMC): ");
     for(int i = 0; i<tam_cmr; i++) {
 
         printf("%d ", cmr[i]);
         Esquina e = getNodeInfo(g, cmr[i]);
 
         Coordenadas c = createCoordenadas(getXEsquina(e), getYEsquina(e));
+        fprintf(txt, "(%.2lf, %.2lf) ", getXEsquina(e), getYEsquina(e));
         insertPathCMRPercurso(p, c);
     }
     printf("\n");
+    fprintf(txt, "\n\n");
 }
 
 

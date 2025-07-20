@@ -27,7 +27,7 @@ void insertQuadraSVG(FILE *svg, Quadra q) {
 }
 
 void insertCircleSVG(FILE *svg, Circulo c) {
-    fprintf(svg, "<circle id=\"%d\" style=\"fill:%s;fill-opacity:0.5;stroke:%s\" r=\"%lf\" cy=\"%lf\" cx=\"%lf\" stroke-width=\"%lf\" />\n", getICirculo(c), getCorpCirculo(c), getCorbCirculo(c), getRCirculo(c), getYCirculo(c), getXCirculo(c), getSWCirculo(c));
+    fprintf(svg, "<circle id=\"%d\" style=\"fill:%s;opacity:0.5;stroke:%s\" r=\"%lf\" cy=\"%lf\" cx=\"%lf\" stroke-width=\"%lf\" />\n", getICirculo(c), getCorpCirculo(c), getCorbCirculo(c), getRCirculo(c), getYCirculo(c), getXCirculo(c), getSWCirculo(c));
 }
 
 void insertRectSVG(FILE *svg, Retangulo r) {
@@ -35,7 +35,12 @@ void insertRectSVG(FILE *svg, Retangulo r) {
 }
 
 void insertLineSVG(FILE *svg, Linha l) {
-    fprintf(svg, "<line id=\"%d\" x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" stroke=\"%s\" stroke-width=\"%lf\" />\n", getILinha(l), getX1Linha(l), getY1Linha(l), getX2Linha(l), getY2Linha(l), getCorLinha(l), getSWLinha(l));
+
+    if(getPontilhadaLinha(l))
+        fprintf(svg, "<line id=\"%d\" x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" stroke=\"%s\" stroke-width=\"%lf\" stroke-dasharray=\"5 2\" />\n", getILinha(l), getX1Linha(l), getY1Linha(l), getX2Linha(l), getY2Linha(l), getCorLinha(l), getSWLinha(l));
+    else
+        fprintf(svg, "<line id=\"%d\" x1=\"%lf\" y1=\"%lf\" x2=\"%lf\" y2=\"%lf\" stroke=\"%s\" stroke-width=\"%lf\" />\n", getILinha(l), getX1Linha(l), getY1Linha(l), getX2Linha(l), getY2Linha(l), getCorLinha(l), getSWLinha(l));
+
 }
 
 void insertTextSVG(FILE *svg, Texto t) {

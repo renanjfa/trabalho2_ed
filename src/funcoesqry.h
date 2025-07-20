@@ -16,9 +16,9 @@ void dren(FILE* txt, Graph g, int n, Lista *arestasN);
 
 void sg(char *nome, double x, double y, double w, double h);
 
-void registrarPercurso(FILE* svg, Graph g, SmuTreap t, HashTable enderecos, HashTable percursos, char *np, char *nome, char *reg1, char *reg2);
+void registrarPercurso(FILE* txt, Graph g, SmuTreap t, HashTable enderecos, HashTable percursos, char *np, char *nome, char *reg1, char *reg2);
 
-void join(FILE* svg, Graph g, SmuTreap t, HashTable percursos, HashTable enderecos, char *np, char *np1, char *np2);
+void join(FILE* txt, Graph g, SmuTreap t, HashTable percursos, HashTable enderecos, char *np, char *np1, char *np2);
 
 void shw(FILE* svg, char *np, char *cmc, char *cmr, HashTable percursos);
 

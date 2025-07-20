@@ -70,16 +70,19 @@ void LeituraCompletaQry(FILE* arqQry, FILE **txt, FILE **svg2, Graph g, SmuTreap
 
         else if(strcmp(comando, "p?") == 0) {
             sscanf(aux, "%s %s %s %s %s", comando, np, nome, reg1, reg2);
-            registrarPercurso(*svg2, g, smuVertices, enderecos, percursos, np, nome, reg1, reg2);
+            fprintf(*txt, "[*] p? %s %s %s %s\n", np, nome, reg1, reg2);
+            registrarPercurso(*txt, g, smuVertices, enderecos, percursos, np, nome, reg1, reg2);
         }
 
         else if(strcmp(comando, "join") == 0) {
             sscanf(aux, "%s %s %s %s", comando, np, np1, np2);
-            join(*svg2, g, smuVertices, percursos, enderecos, np, np1, np2);
+            fprintf(*txt, "[*] join %s %s %s\n", np, np1, np2);
+            join(*txt, g, smuVertices, percursos, enderecos, np, np1, np2);
         }
 
         else if(strcmp(comando, "shw") == 0) {
             sscanf(aux, "%s %s %s %s", comando, np, cmc, cmr);
+            fprintf(*txt, "[*] shw %s %s %s\n\n", np, cmc, cmr);
             shw(*svg2, np, cmc, cmr, percursos);
         }
     }
