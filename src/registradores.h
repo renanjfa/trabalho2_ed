@@ -41,15 +41,20 @@ void setYEndereco(Endereco e, double y);
 
 /* ----- CONSTRUTOR PERCURSO ----- */
 
-Percurso createPercurso(char *nome, char *origem, char *destino);
+// Percurso createPercurso(char *nome, char *origem, char *destino);
+Percurso createPercurso(char *nome, Endereco origem, Endereco destino);
 
 /* ----- METODOS GET PERCURSO ----- */
 
 char* getNomePercurso(Percurso p);
 
-char* getOrigemPercurso(Percurso p);
+// char* getOrigemPercurso(Percurso p);
 
-char* getDestinoPercurso(Percurso p);
+// char* getDestinoPercurso(Percurso p);
+
+Endereco getOrigemPercurso(Percurso p);
+
+Endereco getDestinoPercurso(Percurso p);
 
 Lista getPathCMRPercurso(Percurso p);
 
