@@ -81,6 +81,9 @@ void shw(FILE* svg, char *np, char *cmc, char *cmr, HashTable percursos) {
     char *path_name_cmc = malloc((strlen(np)+5) * sizeof(char));
     char *path_name_cmr = malloc((strlen(np)+5) * sizeof(char));
 
+    strcpy(path_name_cmc, np);
+    strcpy(path_name_cmr, np);
+
     strcat(path_name_cmc, "cmc");
     strcat(path_name_cmr, "cmr");
 
@@ -174,7 +177,7 @@ void registrarPercurso(FILE* svg, Graph g, SmuTreap t, HashTable enderecos, Hash
     Esquina e1 = getInfoMaisProximoRaioSmuT(t, getXEndereco(origem), getYEndereco(origem), 50, BBinternoRegiao);
     Esquina e2 = getInfoMaisProximoRaioSmuT(t, getXEndereco(destino), getYEndereco(destino), 50, BBinternoRegiao);
 
-    Percurso p = createPercurso(np, getNomeEsquina(e1), getNomeEsquina(e2));
+    Percurso p = createPercurso(np, origem, destino);
     insertHashTable(percursos, np, p);
 
 
@@ -183,10 +186,10 @@ void registrarPercurso(FILE* svg, Graph g, SmuTreap t, HashTable enderecos, Hash
     int tam_cmc;
     int tam_cmr;
 
-    printGraph(g, extraiComprimento);
+    //printGraph(g, extraiComprimento);
 
-    dijkstra(g, getNomeEsquina(e1), getNomeEsquina(e2), cmc, &tam_cmc, extraiComprimento);
-    dijkstra(g, getNomeEsquina(e1), getNomeEsquina(e2), cmr, &tam_cmr, extraiVelocidade);
+    dijkstra(g, getNomeEsquina(e2), getNomeEsquina(e1), cmc, &tam_cmc, extraiComprimento);
+    dijkstra(g, getNomeEsquina(e2), getNomeEsquina(e1), cmr, &tam_cmr, extraiVelocidade);
 
     for(int i = 0; i<tam_cmc; i++) {
 
@@ -208,19 +211,53 @@ void registrarPercurso(FILE* svg, Graph g, SmuTreap t, HashTable enderecos, Hash
     }
     printf("\n");
 
-    printPathCMCSVG(svg, p, np);
-
-
-
     printf("saida p?\n");
 }
 
 
-// void join(FILE* svg, Graph g, SmuTreap t, HashTable percursos, HashTable enderecos, char *np, char *np1, char *np2) {
+void join(FILE* svg, Graph g, SmuTreap t, HashTable percursos, HashTable enderecos, char *np, char *np1, char *np2) {
 
-    
+    printf("\nentrou join\n");
 
+    Percurso p1 = buscaHashTable(percursos, np1);
+    Percurso p2 = buscaHashTable(percursos, np2);
 
-// }
+    Endereco end_destino_np1 = getDestinoPercurso(p1);
+    Endereco end_origem_np2 = getOrigemPercurso(p2);
+
+    Esquina eq1 = getInfoMaisProximoRaioSmuT(t, getXEndereco(end_destino_np1), getYEndereco(end_destino_np1), 50, BBinternoRegiao);
+    Esquina eq2 = getInfoMaisProximoRaioSmuT(t, getXEndereco(end_origem_np2), getYEndereco(end_origem_np2), 50, BBinternoRegiao);
+
+    Percurso p = createPercurso(np, getDestinoPercurso(p1), getOrigemPercurso(p2));
+    insertHashTable(percursos, np, p);
+
+    int *cmc = malloc(getTotalNodes(g) * sizeof(int));
+    int *cmr = malloc(getTotalNodes(g) * sizeof(int));
+    int tam_cmc;
+    int tam_cmr;
+
+    dijkstra(g, getNomeEsquina(eq2), getNomeEsquina(eq1), cmc, &tam_cmc, extraiComprimento);
+    dijkstra(g, getNomeEsquina(eq2), getNomeEsquina(eq1), cmr, &tam_cmr, extraiVelocidade);
+
+    for(int i = 0; i<tam_cmc; i++) {
+
+        printf("%d ", cmc[i]);
+        Esquina e = getNodeInfo(g, cmc[i]);
+
+        Coordenadas c = createCoordenadas(getXEsquina(e), getYEsquina(e));
+        insertPathCMCPercurso(p, c);
+    }
+    printf("\n");
+
+    for(int i = 0; i<tam_cmr; i++) {
+
+        printf("%d ", cmr[i]);
+        Esquina e = getNodeInfo(g, cmr[i]);
+
+        Coordenadas c = createCoordenadas(getXEsquina(e), getYEsquina(e));
+        insertPathCMRPercurso(p, c);
+    }
+    printf("\n");
+}
 
 
