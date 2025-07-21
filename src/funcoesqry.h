@@ -14,7 +14,7 @@ void alag(FILE* svg, FILE* txt, Graph g, SmuTreap t, int n, double x, double y, 
 // reportar txt
 void dren(FILE* txt, Graph g, int n, Lista *arestasN);
 
-void sg(char *nome, double x, double y, double w, double h);
+void sg(FILE* svg, Graph g, SmuTreap t, char *nome, double x, double y, double w, double h);
 
 void registrarPercurso(FILE* txt, Graph g, SmuTreap t, HashTable enderecos, HashTable percursos, char *np, char *nome, char *reg1, char *reg2);
 
