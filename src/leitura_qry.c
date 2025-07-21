@@ -15,6 +15,7 @@
 
 void inserirQuadrasSVG2(char *key, Quadra q, FILE* svg) {
     if(!q) return;
+    (void)key;
     Estilo ts = criarEstilo("sans", "b", "12px");
 
     insertQuadraSVG(svg, q);

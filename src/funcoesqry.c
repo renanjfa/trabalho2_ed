@@ -140,7 +140,7 @@ void desabilitarArestasAlagadas(Graph g, Lista arestas, FILE* svg, FILE* txt) {
 
         x1 = getXEsquina(eq_from); y1 = getYEsquina(eq_from);
         x2 = getXEsquina(eq_to); y2 = getYEsquina(eq_to);
-
+ 
 
         Linha l = criarLinha(27, x1, y1, x2, y2, "black", false);
         insertLineSVG(svg, l);

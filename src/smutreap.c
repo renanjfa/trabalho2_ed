@@ -513,14 +513,17 @@ bool getInfosAtingidoPontoSmuT(SmuTreap t, double x, double y, FpontoInternoAInf
 
 
 DescritorTipoInfo getTypeInfoSrbT(SmuTreap t, SmuNode n) {
+    (void)t;
     return ((stNode*)n)->d;
 }
 
 Info getInfoSmuT(SmuTreap t , SmuNode n) {
+    (void)t;
     return ((stNode*)n)->info;
 }
 
 Info getBoundingBoxSmuT(SmuTreap t, SmuNode r, double *x, double *y, double *w, double *h) {
+    (void)t;
     *x = getXBoundingBox(((stNode*)r)->bbinfo);
     *y = getYBoundingBox(((stNode*)r)->bbinfo);
     *w = getWBoundingBox(((stNode*)r)->bbinfo);
@@ -624,7 +627,7 @@ bool printDotSmuTreap(SmuTreap t, char *fn) {
 SmuNode procuraNoSmuTAux(SmuTreap t, SmuNode r, FsearchNo f, void *aux) {
     if(r==NULL) return NULL;
 
-    if(f(r, getInfoSmuT(t, r), ((stNode*)r)->anc.x, ((stNode*)r)->anc.y, aux));
+    if(f(r, getInfoSmuT(t, r), ((stNode*)r)->anc.x, ((stNode*)r)->anc.y, aux)) return NULL;
 
     ((stNode*)r)->esq = procuraNoSmuTAux(t, ((stNode*)r)->esq, f, aux);
     ((stNode*)r)->dir = procuraNoSmuTAux(t, ((stNode*)r)->dir, f, aux);
@@ -635,6 +638,7 @@ SmuNode procuraNoSmuTAux(SmuTreap t, SmuNode r, FsearchNo f, void *aux) {
 SmuNode procuraNoSmuT(SmuTreap t, FsearchNo f, void *aux) {
     if (t == NULL) return NULL;
     SmuNode r = procuraNoSmuTAux(t, ((stSmuTreap*)t)->raiz, f, aux);
+    return r;
 }
 
 

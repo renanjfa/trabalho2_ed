@@ -2,6 +2,7 @@
 #define MINHEAP_H
 
 #include <stdbool.h>
+#include <math.h>
 
 typedef void *MinHeap;
 

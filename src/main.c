@@ -6,6 +6,7 @@
 #include "hash_table.h"
 #include "leitura_cidade.h"
 #include "leitura_via.h"
+#include "leitura_qry.h"
 #include "graph.h"
 #include "tratar_strings.h"
 

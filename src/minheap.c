@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include "minheap.h"
 
@@ -131,7 +132,7 @@ double extractMinDist(MinHeap h) {
 
     if(((stHeap*)h)->size == 0) {
         printf("Heap id empty.\n");
-        return;
+        return -1.0;
     }
 
     ItemHeap root = ((stHeap*)h)->arr[0];

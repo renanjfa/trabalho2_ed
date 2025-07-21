@@ -116,11 +116,13 @@ void getNodeCoordinates(Graph g, Node node, double *x, double *y) {
 
 
 Node getFromNode(Graph g, Edge e) {
+    (void)g;
     return ((stEdge*)e)->from;
 }
 
 
 Node getToNode(Graph g, Edge e) {
+    (void)g;
     return ((stEdge*)e)->to;
 }
 
@@ -142,20 +144,24 @@ Edge getEdge(Graph g, Node from, Node to) {
 
 
 Info getEdgeInfo(Graph g, Edge e) {
+    (void)g;
     return ((stEdge*)e)->dados; 
 }
 
 bool isHabilitadaEdge(Graph g, Edge e) {
+    (void)g;
     return ((stEdge*)e)->habilitado;
 }
 
 void setHabilitadaEdge(Graph g, Edge e, bool new_state) {
+    (void)g;
     ((stEdge*)e)->habilitado = new_state;
 }
 
 
 
 void setEdgeInfo(Graph g, Edge e, Info info) {
+    (void)g;
     ((stEdge*)e)->dados = info;
 }
 
@@ -565,7 +571,7 @@ void printGraph(Graph g, FuncCusto extraiPeso) {
             Node from = getFromNode(g, e);
             Info info = getEdgeInfo(g, e);
             double peso = extraiPeso(info);
-            printf(" [%d (peso: %.2f)]", to, peso);
+            printf(" [%d -> %d (peso: %.2f)]", from, to, peso);
         }
         printf("\n");
     }

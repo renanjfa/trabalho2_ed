@@ -168,6 +168,7 @@ typedef struct ponto {
 } Ponto;
 
 bool BBinternoRegiao(SmuNode r, BoundingBox bbinfo, double x1, double y1, double x2, double y2) {
+    (void)r;
     Ponto p1, p4;
     p1.x = ((stBB*)bbinfo)->x; 
     p1.y = ((stBB*)bbinfo)->y;
