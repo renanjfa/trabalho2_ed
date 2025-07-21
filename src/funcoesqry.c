@@ -62,6 +62,11 @@ void shw(FILE* svg, char *np, char *cmc, char *cmr, HashTable percursos) {
         setSWLinha(l_inalcancavel_cmc, 10);
         insertLineSVG(svg, l_inalcancavel_cmc);
 
+        Circulo c1 = criarCirculo(27, getXEndereco(destino_cmc), getYEndereco(destino_cmc), 30, "black", "black");
+        Estilo ts = criarEstilo("sans", "b", "30px");
+        Texto t = criarTexto(27, getXEndereco(destino_cmc)+50, getYEndereco(destino_cmc), "black", "black", 'i', "DESTINO", ts);
+        insertCircleSVG(svg, c1); insertTextSVG(svg, t);
+
         inalcancavel = true;
     }
     else {
@@ -80,19 +85,8 @@ void shw(FILE* svg, char *np, char *cmc, char *cmr, HashTable percursos) {
     
     
     Lista path_cmr = getPathCMRPercurso(p);
-    if(getTamanhoLista(path_cmr) == 1) {
-        printf("SEM DESTINO\n");
-        Endereco origem_cmr = getOrigemPercurso(p);
-        Endereco destino_cmr = getDestinoPercurso(p);
-
-        Linha l_inalcancavel_cmr = criarLinha(27, getXEndereco(origem_cmr), getYEndereco(origem_cmr), getXEndereco(destino_cmr), getYEndereco(destino_cmr), "red", true);
-        setSWLinha(l_inalcancavel_cmr, 10);
-        insertLineSVG(svg, l_inalcancavel_cmr);
-
-        inalcancavel = true;
-    }
-    else {
-
+    if(!(getTamanhoLista(path_cmr) == 1)) {
+        
         for(Celula p = getInicioLista(path_cmr); getProxCelula(p) != NULL && p != NULL; p = getProxCelula(p)) {
             Coordenadas inicio = getConteudoCelula(p);
             Coordenadas fim = getConteudoCelula(getProxCelula(p));
@@ -102,6 +96,9 @@ void shw(FILE* svg, char *np, char *cmc, char *cmr, HashTable percursos) {
             insertLineSVG(svg, l2);
         }
     }
+    
+
+    
     
     if(!inalcancavel) {
 
@@ -286,7 +283,7 @@ void registrarPercurso(FILE* txt, Graph g, SmuTreap t, HashTable enderecos, Hash
 }
 
 
-void join(FILE* txt, Graph g, SmuTreap t, HashTable percursos, HashTable enderecos, char *np, char *np1, char *np2) {
+void join(FILE* txt, Graph g, SmuTreap t, HashTable percursos, char *np, char *np1, char *np2) {
 
     printf("\nentrou join\n");
     fprintf(txt, "Percurso %s (%s e %s):\n", np, np1, np2);
