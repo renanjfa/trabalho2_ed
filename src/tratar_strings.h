@@ -3,6 +3,11 @@
 
 #include <stdbool.h>
 
+/*
+    TRATAR_STRINGS.H:
+    Modulo responsável por fazer o tratamento de strings e arquivos ao longo do projeto.
+*/
+
 char* trataDirEntrada(const char *str);
 
 char* getNomeGeo(const char *arqgeo);

@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 #include "retangulo.h"
 #include "circulo.h"
 #include "linha.h"
@@ -13,7 +12,7 @@
 
 typedef void *BoundingBox;
 /*
-    Arquivo .h relacionado ao bounding box (forma de um retangulo que engloba o retangulo maximo de cada forma padrao
+    Módulo relacionado ao bounding box (forma de um retangulo que engloba o retangulo maximo de cada forma padrao
     texto, linha, circulo, retangulo), responsavel por todas as operacoes relacionadas aos bounding boxes de todas 
     as formas como uniao de bbs das subarvores, verificacao de forma interior a outra e etc.
 */
@@ -132,5 +131,6 @@ bool BBinternoRegiao(SmuNode n, BoundingBox i, double x1, double y1, double x2, 
 /// @param y ancora y do ponto
 /// @return retorna true se o ponto é interno a forma passada como parametro, retorna false se não.
 bool PontoInternoFormas(SmuNode n, Info forma, double x, double y);
+
 
 #endif

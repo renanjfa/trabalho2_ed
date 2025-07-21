@@ -3,7 +3,8 @@
 
 typedef void *Linha;
 /*
-    Arquivo .h relacionado a uma forma de uma linha, incluindo operacoes de set e get e calculo de area da forma.
+    LINHA.H
+    Módulo responsável por gerenciar a forma de uma linha, incluindo operacoes de set e get e calculo de area da forma.
 */
 
 

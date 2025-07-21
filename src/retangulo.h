@@ -5,7 +5,8 @@
 
 typedef void *Retangulo; 
 /*
-    Arquivo .h relacionado a uma forma de um retangulo, incluindo operacoes de set e get e calculo de area da forma.
+    RETANGULO.H
+    Módulo que gerencia a forma de um retangulo, incluindo operacoes de set e get e calculo de area da forma.
 */
 
 

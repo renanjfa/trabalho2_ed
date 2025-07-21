@@ -4,7 +4,8 @@
 typedef void *Texto;
 typedef void *Estilo;
 /*
-    Arquivo .h relacionado a uma forma de um texto, incluindo operacoes de set e get e calculo de area da forma.
+    TEXTO.H
+    Módulo que gerencia a forma de um texto, incluindo operacoes de set e get e calculo de area da forma.
 */
 
 

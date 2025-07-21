@@ -7,7 +7,8 @@
 
 typedef void *Circulo; 
 /*
-    Arquivo .h relacionado a uma forma de um circulo, incluindo operacoes de set e get e calculo de area da forma.
+    CIRCULO.H
+    Módulo responsável por gerenciar a forma de um circulo, incluindo operacoes de set e get e calculo de area da forma.
 */
 
 

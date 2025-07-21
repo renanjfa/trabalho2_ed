@@ -22,8 +22,6 @@ typedef struct stPercurso {
     char *nome;
     Endereco origem;
     Endereco destino;
-    // char *origem;   // nome do endereco de origem
-    // char *destino;  // nome do endereco de destino
     Lista path_cmc;
     Lista path_cmr;
 } stPercurso;
@@ -129,39 +127,6 @@ void setYEndereco(Endereco e, double y) {
 }
 
 
-
-
-
-// Percurso createPercurso(char *nome, char *origem, char *destino) {
-//     stPercurso *p = malloc(sizeof(stPercurso));
-
-//     p->nome = (char*)malloc(strlen(nome)+1);
-//     if(p->nome == NULL) {
-//         printf("Erro na alocacao do nome percurso.\n");
-//         exit(1);
-//     }
-//     strcpy(p->nome, nome);
-
-//     p->origem = (char*)malloc(strlen(origem)+1);
-//     if(p->origem == NULL) {
-//         printf("Erro na alocacao do origem percurso.\n");
-//         exit(1);
-//     }
-//     strcpy(p->origem, origem);
-
-//     p->destino = (char*)malloc(strlen(destino)+1);
-//     if(p->destino == NULL) {
-//         printf("Erro na alocacao do destino percurso.\n");
-//         exit(1);
-//     }
-//     strcpy(p->destino, destino);
-
-//     p->path_cmc = criaLista();
-//     p->path_cmr = criaLista();
-
-//     return ((stPercurso*)p);
-// }
-
 Percurso createPercurso(char *nome, Endereco origem, Endereco destino) {
     stPercurso *p = malloc(sizeof(stPercurso));
 
@@ -186,9 +151,6 @@ char* getNomePercurso(Percurso p) {
     return ((stPercurso*)p)->nome;
 }
 
-// char* getOrigemPercurso(Percurso p) {
-//     return ((stPercurso*)p)->origem;
-// }
 
 Endereco getOrigemPercurso(Percurso p) {
     return ((stPercurso*)p)->origem;
@@ -198,22 +160,11 @@ Endereco getDestinoPercurso(Percurso p) {
     return ((stPercurso*)p)->destino;
 }
 
-// char* getDestinoPercurso(Percurso p) {
-//     return ((stPercurso*)p)->destino;
-// }
-
 
 void setNomePercurso(Percurso p, char *nome) {
     strcpy(((stPercurso*)p)->nome, nome);
 }
 
-// void setOrigemPercurso(Percurso p, char *origem) {
-//     strcpy(((stPercurso*)p)->origem, origem);
-// }
-
-// void setDestinoPercurso(Percurso p, char *destino) {
-//     strcpy(((stPercurso*)p)->destino, destino);
-// }
 
 void insertPathCMRPercurso(Percurso p, Coordenadas c) {
     insereLista(((stPercurso*)p)->path_cmr, c);
@@ -230,9 +181,6 @@ Lista getPathCMRPercurso(Percurso p) {
 Lista getPathCMCPercurso(Percurso p) {
     return ((stPercurso*)p)->path_cmc;
 }
-
-
-
 
 
 Coordenadas createCoordenadas(double x, double y) {

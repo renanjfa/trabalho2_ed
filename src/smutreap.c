@@ -436,8 +436,6 @@ bool getInfosDentroRegiaoSmuT(SmuTreap t, double x1, double y1, double w, double
         return false;
     }
 
-    //((stSmuTreap*)t)->raiz = RebalanceFromRoot(((stSmuTreap*)t)->raiz);
-    printf("\nTAM LISTA INFO DENTRO REGIAO = %d\n\n", getTamanhoLista(L));
     return verif;
 }
 
@@ -507,7 +505,6 @@ bool getInfosAtingidoPontoSmuT(SmuTreap t, double x, double y, FpontoInternoAInf
         return false;
     }
 
-    printf("TAM LISTA INFO ATINGIDOS: %d\n\n", getTamanhoLista(L));
     return true;
 }
 

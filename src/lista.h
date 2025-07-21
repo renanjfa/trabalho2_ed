@@ -6,7 +6,9 @@ typedef void *Lista;
 typedef void *Celula;
 typedef void *Conteudo; 
 /*
-    Arquivo .h relacionado a aplicacao abstrata de uma lista, pode ser utilizada de forma generica em qualquer contexto.
+    LISTA.H
+    Módulo responsável pela aplicação abstrata de uma lista, pode ser utilizada de forma genérica em qualquer contexto.
+    Inclui operações básicas para operações com a lista.
 */
 
 

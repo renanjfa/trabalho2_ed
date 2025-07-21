@@ -9,6 +9,10 @@
 #include "graph.h"
 #include "smutreap.h"
 
+/*
+    LEITURA_QRY.H
+    Módulo responsável pela leitura de um arquivo .qry de consulta.
+*/
 
 void LeituraCompletaQry(FILE* arqQry, FILE **txt, FILE **svgs2, Graph g, SmuTreap smuVertices, HashTable quadras, HashTable enderecos, HashTable percursos, Lista *arestasN);
 

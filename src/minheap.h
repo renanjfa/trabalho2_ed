@@ -4,7 +4,13 @@
 #include <stdbool.h>
 #include <math.h>
 
+
 typedef void *MinHeap;
+/*
+    MINHEAP.H
+    Módulo responsável por gerenciar uma estrutura de dados de FILA DE PRIORIDADE MÍNIMA.
+    Inclui operações básicas para operação com a estrutura.
+*/
 
 MinHeap createMinHeap(int capacidade);
 
@@ -23,7 +29,6 @@ bool isMinHeapEmpty(MinHeap h);
 void atualizaMinHeap(MinHeap h, int v, double novaDist);
 
 bool estaNaHeap(MinHeap h, int v);
-
 
 
 #endif

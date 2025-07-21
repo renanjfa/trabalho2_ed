@@ -43,9 +43,7 @@ void registrarEndereco(FILE* svg, FILE* txt, HashTable enderecos, HashTable quad
 
 void shw(FILE* svg, char *np, char *cmc, char *cmr, HashTable percursos) {
 
-    printf("entrada shw\n");
     Percurso p = buscaHashTable(percursos, np);
-    printf("saiu buscahash\n");
     if(!p) {
         printf("percurso null\n");
     }
@@ -54,7 +52,6 @@ void shw(FILE* svg, char *np, char *cmc, char *cmr, HashTable percursos) {
 
     Lista path_cmc = getPathCMCPercurso(p);
     if(getTamanhoLista(path_cmc) == 1) {
-        printf("SEM DESTINO\n");
         Endereco origem_cmc = getOrigemPercurso(p);
         Endereco destino_cmc = getDestinoPercurso(p);
 
@@ -81,7 +78,6 @@ void shw(FILE* svg, char *np, char *cmc, char *cmr, HashTable percursos) {
         }
     }
     
-    
     Lista path_cmr = getPathCMRPercurso(p);
     if(!(getTamanhoLista(path_cmr) == 1)) {
         
@@ -94,9 +90,6 @@ void shw(FILE* svg, char *np, char *cmc, char *cmr, HashTable percursos) {
             insertLineSVG(svg, l2);
         }
     }
-    
-
-    
     
     if(!inalcancavel) {
 
@@ -112,12 +105,9 @@ void shw(FILE* svg, char *np, char *cmc, char *cmr, HashTable percursos) {
         printPathCMCSVG(svg, p, path_name_cmc);
         printPathCMRSVG(svg, p, path_name_cmr);
     
-        printAnimationSVG(svg, path_name_cmc);
-        printAnimationSVG(svg, path_name_cmr);
+        printAnimationSVG(svg, path_name_cmc, 15);
+        printAnimationSVG(svg, path_name_cmr, 10);
     }
-
-
-    printf("saida shw\n");
 }
 
 
@@ -209,7 +199,6 @@ void inserirPathsPercursos(FILE* txt, Graph g, int *cmc, int *cmr, int tam_cmc, 
     fprintf(txt, "Caminho Mais Curto (CMC): ");
     for(int i = 0; i<tam_cmc; i++) {
 
-        printf("%d ", cmc[i]);
         Esquina e = getNodeInfo(g, cmc[i]);
 
         Coordenadas c = createCoordenadas(getXEsquina(e), getYEsquina(e));
@@ -217,26 +206,22 @@ void inserirPathsPercursos(FILE* txt, Graph g, int *cmc, int *cmr, int tam_cmc, 
         insertPathCMCPercurso(p, c);
     }
     fprintf(txt, "\n");
-    printf("\n");
 
     fprintf(txt, "Caminho Mais Rapido (CMR): ");
     for(int i = 0; i<tam_cmr; i++) {
 
         Esquina e = getNodeInfo(g, cmr[i]);
-        printf("%d (%.2lf, %.2lf)", cmr[i], getXEsquina(e), getYEsquina(e));
 
         Coordenadas c = createCoordenadas(getXEsquina(e), getYEsquina(e));
         fprintf(txt, "(%.2lf, %.2lf) ", getXEsquina(e), getYEsquina(e));
         insertPathCMRPercurso(p, c);
     }
-    printf("\n");
     fprintf(txt, "\n\n");
 }
 
 
 void registrarPercurso(FILE* txt, Graph g, SmuTreap t, HashTable enderecos, HashTable percursos, char *np, char *nome, char *reg1, char *reg2) {
     
-    printf("entrada p?\n");
     fprintf(txt, "Percurso %s:\n", np);
     Endereco origem = buscaHashTable(enderecos, reg1);
     Endereco destino = buscaHashTable(enderecos, reg2);
@@ -247,8 +232,6 @@ void registrarPercurso(FILE* txt, Graph g, SmuTreap t, HashTable enderecos, Hash
     Percurso p = createPercurso(np, origem, destino);
     insertHashTable(percursos, np, p);
 
-
-    //printGraph(g, extraiComprimento);
 
     if(strcmp(nome, "-") == 0) {
         int *cmc = malloc(getTotalNodes(g) * sizeof(int));
@@ -274,16 +257,11 @@ void registrarPercurso(FILE* txt, Graph g, SmuTreap t, HashTable enderecos, Hash
 
         inserirPathsPercursos(txt, sub, cmc_sub, cmr_sub, tam_cmc_sub, tam_cmr_sub, p);
     }
-
-
-
-    printf("saida p?\n");
 }
 
 
 void join(FILE* txt, Graph g, SmuTreap t, HashTable percursos, char *np, char *np1, char *np2) {
 
-    printf("\nentrou join\n");
     fprintf(txt, "Percurso %s (%s e %s):\n", np, np1, np2);
 
     Percurso p1 = buscaHashTable(percursos, np1);
@@ -309,27 +287,23 @@ void join(FILE* txt, Graph g, SmuTreap t, HashTable percursos, char *np, char *n
     fprintf(txt, "Caminho Mais Curto (CMC): ");
     for(int i = 0; i<tam_cmc; i++) {
 
-        printf("%d ", cmc[i]);
         Esquina e = getNodeInfo(g, cmc[i]);
 
         Coordenadas c = createCoordenadas(getXEsquina(e), getYEsquina(e));
         fprintf(txt, "(%.2lf, %.2lf) ", getXEsquina(e), getYEsquina(e));
         insertPathCMCPercurso(p, c);
     }
-    printf("\n");
     fprintf(txt, "\n");
 
     fprintf(txt, "Caminho Mais Curto (CMC): ");
     for(int i = 0; i<tam_cmr; i++) {
 
-        printf("%d ", cmr[i]);
         Esquina e = getNodeInfo(g, cmr[i]);
 
         Coordenadas c = createCoordenadas(getXEsquina(e), getYEsquina(e));
         fprintf(txt, "(%.2lf, %.2lf) ", getXEsquina(e), getYEsquina(e));
         insertPathCMRPercurso(p, c);
     }
-    printf("\n");
     fprintf(txt, "\n\n");
 }
 

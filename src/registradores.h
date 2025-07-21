@@ -1,12 +1,18 @@
 #ifndef REGISTRADORES_H
 #define REGISTRADORES_H
 
+#include "lista.h"
+#include "hash_table.h"
+
 typedef void *Endereco;
 typedef void *Percurso;
 typedef void *Coordenadas;
+/*
+    REGISTRADORES.H
+    Módulo responsável por gerenciar 3 instâncias de registro para consulta: Endereço, Percurso e Coordenadas.
+    Inclui operações básicas de cada registro (Métodos set, get e auxiliares). 
+*/
 
-#include "lista.h"
-#include "hash_table.h"
 
 /* ----- CONSTRUTOR ENDERECO ----- */
 

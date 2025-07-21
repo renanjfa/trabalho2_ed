@@ -369,105 +369,17 @@ Node addNode(Graph g, char *nome, double x, double y, Info info) {
 }
 
 
-
-// void dijkstra(Graph g, char *nomeOrigem, char *nomeDestino, int* caminho, int* tamCaminho, FuncCusto extraiPeso) {
-//     if(!g || !caminho) return;
-
-//     printf("DIJKSTRA:\n");
-
-//     int n = getTotalNodes(g);
-//     double* dist = malloc(n * sizeof(double));
-//     int* anterior = malloc(n * sizeof(int));
-
-//     for (int i = 0; i < n; i++) {
-//         dist[i] = DBL_MAX;
-//         anterior[i] = -1;
-//     }
-
-//     Node origem = getNode(g, nomeOrigem);
-//     Node destino = getNode(g, nomeDestino);
-//     printf("%d -> %d\n", origem, destino);
-
-//     MinHeap heap = createMinHeap(n);
-//     for (int i = 0; i < n; i++) {
-//         insertMinHeap(heap, i, dist[i]); // Insere todos, mas a heap prioriza os menores
-//     }
-//     dist[origem] = 0.0;
-//     atualizaMinHeap(heap, origem, 0.0);
-    
-
-//     while (!isMinHeapEmpty(heap)) {
-//         int u = extractMinV(heap);
-//         //printf("Extraindo nó %d (dist = %.2lf)\n", u, dist[u]);
-
-
-//         for (Celula p = getInicioLista( ((stGraph*)g)->vertices[u]->adjacentes ); p != NULL; p = getProxCelula(p)) {
-
-//             Edge e = getConteudoCelula(p);
-//             if(isHabilitadaEdge(g, e)) {
-
-//                 Node v = getToNode(g, e);
-//                 //printf("v = %d (getToNode)\n", v);
-    
-//                 double peso = extraiPeso(getEdgeInfo(g, e)); 
-//                 //printf("  Verificando aresta %d -> %d (peso = %.2f)\n", u, v, peso);
-//                 //printf("  dist[u] = %.2f, dist[v] = %.2f\n", dist[u], dist[v]);
-//                 //printf("u = %d, v = %d, dist[u] = %.2f, peso = %.2f, dist[v] = %.2f\n", u, v, dist[u], peso, dist[v]);
-    
-//                 if (dist[u] + peso < dist[v]) {
-//                     //printf("  Atualizando dist[%d] para %.2f\n", v, dist[u] + peso);
-//                     dist[v] = dist[u] + peso;
-//                     anterior[v] = u;
-//                     //printf("Atualizando dist[%d]: %.2f -> %.2f (via %d)\n", v, dist[v], dist[u] + peso, u);
-    
-//                     if (estaNaHeap(heap, v)) {
-//                         //printf("    Atualizando heap para nó %d\n", v);
-//                         atualizaMinHeap(heap, v, dist[v]);
-//                     } else {
-//                     //printf("    Inserindo nó %d na heap\n", v);
-//                         insertMinHeap(heap, v, dist[v]);
-//                     }
-//                 }
-//             }
-//         }
-//     }
-
-    
-//     // Reconstruir caminho
-//     int atual = destino;
-//     int stack[n];
-//     int topo = 0;
-
-//     while (atual != -1) {
-//         stack[topo++] = atual;
-//         atual = anterior[atual];
-//     }
-
-//     // Inverter para colocar na ordem correta
-//     *tamCaminho = topo;
-//     for (int i = 0; i < topo; i++)
-//         caminho[i] = stack[topo - i - 1];
-
-//     free(dist);
-//     free(anterior);
-//     free(heap);
-// }
-
 void dijkstra(Graph g, char *nomeOrigem, char *nomeDestino, int* caminho, int* tamCaminho, FuncCusto extraiPeso) {
     if(!g || !caminho) return;
 
-    //printf("DIJKSTRA OTIMIZADO COM HEURÍSTICA EUCLIDIANA:\n");
-
     int n = getTotalNodes(g);
     double* dist = malloc(n * sizeof(double));
-    double* distHeuristica = malloc(n * sizeof(double)); // Distância + heurística
+    double* distHeuristica = malloc(n * sizeof(double)); // Distância + Distância Euclidiana
     int* anterior = malloc(n * sizeof(int));
 
-    // Obter coordenadas do destino para cálculo da heurística
+    // Obter coordenadas do destino para cálculo da distância euclidiana
     Node destino = getNode(g, nomeDestino);
     double xDest = 0, yDest = 0;
-    // Assumindo que você tem funções para obter coordenadas dos nós
-    // Se não tiver, precisará implementá-las
     getNodeCoordinates(g, destino, &xDest, &yDest);
 
     for (int i = 0; i < n; i++) {
@@ -477,23 +389,22 @@ void dijkstra(Graph g, char *nomeOrigem, char *nomeDestino, int* caminho, int* t
     }
 
     Node origem = getNode(g, nomeOrigem);
-    printf("%d -> %d\n", origem, destino);
 
-    // Calcular heurística para o nó de origem
+    // Calcular distancia euclidiana para o nó de origem
     double xOrig, yOrig;
     getNodeCoordinates(g, origem, &xOrig, &yOrig);
     double heuristicaOrig = sqrt(pow(xOrig - xDest, 2) + pow(yOrig - yDest, 2));
 
     MinHeap heap = createMinHeap(n);
     dist[origem] = 0.0;
-    distHeuristica[origem] = heuristicaOrig; // Usamos a heurística para priorização
+    distHeuristica[origem] = heuristicaOrig; // dist euclidiana para priorização
     insertMinHeap(heap, origem, distHeuristica[origem]);
     
 
     while (!isMinHeapEmpty(heap)) {
         int u = extractMinV(heap);
         
-        // Se chegamos ao destino, podemos terminar mais cedo
+        // se chegar no destino, encerrar mais cedo
         if (u == destino) {
             break;
         }
@@ -508,12 +419,12 @@ void dijkstra(Graph g, char *nomeOrigem, char *nomeDestino, int* caminho, int* t
                     dist[v] = dist[u] + peso;
                     anterior[v] = u;
                     
-                    // Calcular heurística para o nó adjacente
+                    // Calcular Dist Euclidiana para o nó adjacente
                     double xV, yV;
                     getNodeCoordinates(g, v, &xV, &yV);
                     double heuristicaV = sqrt(pow(xV - xDest, 2) + pow(yV - yDest, 2));
                     
-                    // Distância heurística = distância real + heurística
+                    // Distância euclidiana = distância real + dist euclidiana
                     distHeuristica[v] = dist[v] + heuristicaV;
                     
                     if (estaNaHeap(heap, v)) {
@@ -547,107 +458,30 @@ void dijkstra(Graph g, char *nomeOrigem, char *nomeDestino, int* caminho, int* t
     free(heap);
 }
 
-
-void printGraph(Graph g, FuncCusto extraiPeso) {
-    if (!g) {
-        printf("Grafo nulo.\n");
-        return;
-    }
-
-    stGraph *graph = (stGraph*) g;
-    printf("Grafo: %s\n", graph->nome);
-    printf("Tipo: %s\n", graph->directed ? "Direcionado" : "Não-direcionado");
-    printf("Total de nós: %d\n", graph->totalNodes);
-    printf("Total de arestas: %d\n", graph->totalEdges);
-
-    for (int i = 0; i < graph->totalNodes; i++) {
-        if (!graph->vertices[i]) continue;
-
-        printf("Vértice %d ->", i);
-        Lista adj = graph->vertices[i]->adjacentes;
-        for (Celula p = getInicioLista(adj); p != NULL; p = getProxCelula(p)) {
-            Edge e = getConteudoCelula(p);
-            Node to = getToNode(g, e);
-            Node from = getFromNode(g, e);
-            Info info = getEdgeInfo(g, e);
-            double peso = extraiPeso(info);
-            printf(" [%d -> %d (peso: %.2f)]", from, to, peso);
-        }
-        printf("\n");
-    }
-}
-
-
-
-
 /*
  **********************
     SUB-GRAFOS
  **********************
 */
 
-
-// void createSubgraphDG(Graph g, char *nomeSubgrafo, char *nomesVerts[], int nVert, bool comArestas) {
-//     if(!g || !nomeSubgrafo) return;
-
-//     Graph sub = createGraph(nVert, ((stGraph*)g)->directed, nomeSubgrafo);
-//     insertHashTable(((stGraph*)g)->subgrafos, nomeSubgrafo, sub);
-
-//     HashTable presentes = createHashTable(nVert+100);
-
-//     for (int i = 0; i < nVert; i++) {
-//         Node node = getNode(g, nomesVerts[i]);
-
-//         Info info = getNodeInfo(g, node);
-//         addNode(sub, nomesVerts[i], info);
-//         insertHashTable(presentes, nomesVerts[i], node);
-//     }
-
-//     for (int i = 0; i < nVert; i++) {
-//         Node origem = (Node)buscaHashTable(((stGraph*)g)->nomesToNodes, nomesVerts[i]);
-
-//         Lista adj = criaLista();
-//         adjacentEdges(g, origem, adj);
-
-//         for (Celula c = getInicioLista(adj); c != NULL; c = getProxCelula(c)) {
-//             Edge e = getConteudoCelula(c);
-//             Node destino = getToNode(g, e);
-//             char* nomeDestino = getNodeName(g, destino);
-
-//             // Apenas adiciona a aresta se ambos os nós estão no subgrafo
-//             if (buscaHashTable(presentes, nomesVerts[i]) && buscaHashTable(presentes, nomeDestino)) {
-
-//                 Node from = (Node)buscaHashTable(((stGraph*)sub)->nomesToNodes, nomesVerts[i]);
-//                 Node to = (Node)buscaHashTable(((stGraph*)sub)->nomesToNodes, nomeDestino);
-
-//                 addEdge(sub, from, to, getEdgeInfo(g, e));
-//             }
-//         }
-//         liberaLista(adj);
-//     }
-
-//     destroiHashTable(presentes);
-// }
-
 void createSubgraphDG(Graph g, char *nomeSubgrafo, char *nomesVerts[], int nVert, bool comArestas) {
     if(!g || !nomeSubgrafo || !nomesVerts || nVert <= 0) return;
 
     Graph sub = createGraph(nVert, ((stGraph*)g)->directed, nomeSubgrafo);
-    if(!sub) return; // Verifica se a criação foi bem sucedida
+    if(!sub) return; 
     
     insertHashTable(((stGraph*)g)->subgrafos, nomeSubgrafo, sub);
 
     HashTable presentes = createHashTable(nVert+100);
     if(!presentes) {
-        // Tratar falha na criação da tabela hash
+        printf("Erro na criacao HashTable presentes!!\n");
         return;
     }
 
-    // Primeiro verifica se todos os vértices existem no grafo original
+    // verifica se todos os vértices existem no grafo original
     for (int i = 0; i < nVert; i++) {
         Node node = getNode(g, nomesVerts[i]);
         if(!node) {
-            // Vértice não existe no grafo original - tratar erro
             destroiHashTable(presentes);
             return;
         }
@@ -666,7 +500,7 @@ void createSubgraphDG(Graph g, char *nomeSubgrafo, char *nomesVerts[], int nVert
         insertHashTable(presentes, nomesVerts[i], node);
     }
 
-    if(comArestas) { // Usar o parâmetro comArestas
+    if(comArestas) { 
         for (int i = 0; i < nVert; i++) {
             Node origem = getNode(g, nomesVerts[i]);
             if(!origem) continue;
@@ -680,7 +514,7 @@ void createSubgraphDG(Graph g, char *nomeSubgrafo, char *nomesVerts[], int nVert
                 Node destino = getToNode(g, e);
                 char* nomeDestino = getNodeName(g, destino);
 
-                // Verifica apenas se o destino está no subgrafo
+                // verifica apenas se o destino está no subgrafo
                 if (buscaHashTable(presentes, nomeDestino)) {
                     Node from = getNode(sub, nomesVerts[i]);
                     Node to = getNode(sub, nomeDestino);
@@ -690,7 +524,7 @@ void createSubgraphDG(Graph g, char *nomeSubgrafo, char *nomesVerts[], int nVert
                     }
                 }
             }
-            liberaLista(adj); // Garantir que libera toda a memória
+            liberaLista(adj); 
         }
     }
 

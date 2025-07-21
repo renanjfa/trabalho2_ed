@@ -16,7 +16,6 @@ char* trataDirEntrada(const char* str) {
     strcpy(dir, str);
 
     if (dir[len - 1] != '/') {
-        //dir[len] = '/';
         dir[len] = '\0'; 
     }
 
@@ -130,14 +129,14 @@ bool leituraLinha(FILE* arq, char *linha, int max_size) {
     if (!arq || !linha) return false;
 
     if (fgets(linha, max_size, arq) == NULL) {
-        if (feof(arq)) return false; // fim do arquivo
+        if (feof(arq)) return false; 
         if (ferror(arq)) {
             perror("[ERRO] na leitura do arquivo");
-            exit(1); // ou return false
+            exit(1); 
         }
         return false;
     }
 
-    linha[strcspn(linha, "\r\n")] = '\0'; // remove \n
+    linha[strcspn(linha, "\r\n")] = '\0';
     return true;
 }

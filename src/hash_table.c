@@ -60,37 +60,6 @@ void insertHashTable(HashTable tabela, char *key, ConteudoHashNode valor) {
 }
 
 
-
-// ConteudoHashNode buscaHashTable(HashTable ht, char *key) {
-//     if (ht == NULL) {
-//         fprintf(stderr, "[ERRO] HashTable NULL!\n");
-//         exit(1);
-//     }
-
-//     int idx = hash(key, ((stHashTable*)ht)->tamanho);
-
-//     stHashNode atual = ((stHashTable*)ht)->buckets[idx];
-
-
-//     while (atual) {
-
-//         if(atual->key != NULL && !key) {
-
-    
-//             if (strcmp(atual->key, key) == 0)
-//                 return atual->value;
-    
-//             atual = atual->proximo;
-//         } else {
-//             atual = atual->proximo;
-//         }
-//     }
-
-//     return NULL;
-// }
-
-
-
 ConteudoHashNode buscaHashTable(HashTable ht, char *key) {
     if (ht == NULL || key == NULL) {
         fprintf(stderr, "[ERRO] HashTable ou chave NULL!\n");
@@ -100,11 +69,9 @@ ConteudoHashNode buscaHashTable(HashTable ht, char *key) {
     int idx = hash(key, ((stHashTable*)ht)->tamanho);
     stHashNode atual = ((stHashTable*)ht)->buckets[idx];
 
-    //printf("atual->key: %s\tkey: %s\n", atual->key, key);
 
     while (atual) {
         if (atual->key && strcmp(atual->key, key) == 0) {
-            //printf("retornando atual->value\n");
             return atual->value;
         }
 
@@ -152,42 +119,3 @@ void percorrerHashTable(HashTable ht, Callback c, void *extra) {
     }
 }
 
-
-// int main() {
-//     // Criar tabela com tamanho inicial adequado
-//     HashTable tabelaEnderecos = criaHashTable(20);
-
-//     int proxId = 0; // contador de Node (índices)
-
-//     // Endereços de exemplo
-//     const char *enderecos[] = {
-//         "Rua A, 100",
-//         "Rua B, 200",
-//         "Av. Central, 300",
-//         "Rua A, 100",          // duplicado proposital
-//         "Rua C, 400",
-//         "Av. Central, 300"     // duplicado proposital
-//     };
-
-//     int total = sizeof(enderecos) / sizeof(enderecos[0]);
-
-//     // Inserção segura
-//     for (int i = 0; i < total; i++) {
-//         Node id = getOrCreateNode(tabelaEnderecos, (char *)enderecos[i], &proxId);
-//         printf("Endereço: %-20s → Node (índice): %d\n", enderecos[i], id);
-//     }
-
-//     // Liberação da hash table
-//     destroiHash(tabelaEnderecos, NULL); // valores são inteiros simples, não precisam de free
-
-//     return 0;
-// }
-
-
-// int *valor = malloc(sizeof(int));
-// *valor = node;
-// insertHashTable(tabela, nome, valor);
-
-// // Recuperar:
-// int *ptr = (int *)buscaHash(tabela, nome);
-// Node node = *ptr;

@@ -6,12 +6,15 @@
 #include "lista.h"
 #include "hash_table.h"
 
+/*
+    FUNCOESQRY.H
+    Módulo responsável pelas funções componentes do arquivo .qry de consulta.
+*/
+
 void registrarEndereco(FILE* svg, FILE* txt, HashTable enderecos, HashTable quadras, char *nomereg, char *cep, char face, int num);
 
-// rpeortar svg e txt
 void alag(FILE* svg, FILE* txt, Graph g, SmuTreap t, int n, double x, double y, double w, double h, Lista *arestasN);
 
-// reportar txt
 void dren(FILE* txt, Graph g, int n, Lista *arestasN);
 
 void sg(FILE* svg, Graph g, SmuTreap t, char *nome, double x, double y, double w, double h);

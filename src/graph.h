@@ -44,54 +44,53 @@ typedef bool (*procEdge)(Graph g, Edge e, int td, int tf, void *extra);
  */
 typedef bool (*dfsRestarted)(Graph g, void *extra);
 
-
+/*
+   Função passada como parâmetro para o dijkstra responsável por extrair algum peso da informação relacionada a aresta.
+*/
 typedef double (*FuncCusto)(Info dados);
 
-//void printGraph(Graph g, FuncCusto extraiPeso);
-
-
-
-
 /*
-    Cria um grafo com, no maximo, "nVert" vertices.
+   Cria um grafo com, no maximo, "nVert" vertices.
  */
 Graph createGraph(int nVert, bool directed, char *nome);
-// perguntar para o professor se precisa do directed
 
 
 /*
-    Retorna numero maximo de vertices que grafo g pode conter.
+   Retorna numero maximo de vertices que grafo g pode conter.
  */
 int getMaxNodes(Graph g);
 
 
 /*
-    Retorna numero total de vertices adicionados ao grafo gr.
+   Retorna numero total de vertices adicionados ao grafo gr.
  */
 int getTotalNodes(Graph g);
 
 /*
-    Retorna o numero total de arestas.
+   Retorna o numero total de arestas.
 */
 int getTotalEdges(Graph g);
 
 /*
-    Retorna se o grafo e orientado ou nao.
+   Retorna se o grafo e orientado ou nao.
 */
 bool getDirected(Graph g);
 
 
 /*
-    Adiciona um novo vértice ao grafo "g" com o nome "nome".
+   Adiciona um novo vértice ao grafo "g" com o nome "nome".
  */
 Node addNode(Graph g, char *nome, double x, double y, Info info);
 
 
 /*
-    Retorna no' cujo de nome e' "nome". 
+   Retorna no' cujo de nome e' "nome". 
  */
 Node getNode(Graph g, char *nome);
 
+/*
+   Retorna por referência as coordenadas (x, y) associadas ao Node node.
+*/
 void getNodeCoordinates(Graph g, Node node, double *x, double *y);
 
 
@@ -197,7 +196,10 @@ void  getNodeNames(Graph g, Lista nomesNodes);
  */
 void getEdges(Graph g, Lista arestas);
 
-
+/*
+   Algoritmo de caminho mínimo dijkstra otimizado para busca espacial.
+   A função utiliza os nomes dos Nodes: origem e destino. Retornam o caminho feito no vetor caminho[]. 
+*/
 void dijkstra(Graph g, char *origem, char *destino, int* caminho, int* tamCaminho, FuncCusto extraiPeso);
 
 /*
@@ -229,14 +231,13 @@ void killDG(Graph g);
  * SUB-GRAFOS
  **********************
 */
+
 /*
     Calcula o subgrafo composto  pelos vertices cujos nomes estao no vetor nomesVerts
 (nVerts e' o tamanho deste vetor). Caso comAresta seja true calcula o subgrafo 
 induzido pelos vertices em nomesVerts
  */
 void createSubgraphDG(Graph g, char *nomeSubgrafo, char *nomesVerts[], int nVert, bool comArestas);
-// interno ao grafo g
-
 
 
 /*
@@ -278,7 +279,6 @@ void getAllEdgesSDG(Graph g, char *nomeSubgrafo, Lista lstEdges);
   Novo grafo.
  */
 Graph produceGraph(Graph g, char *nomeSubgrafo);
-// sai para fora do grafo g, cria um novo grafo baseado nas mesmas informacoes do subgrafo com nomeSubgrafo
 
 
 #endif

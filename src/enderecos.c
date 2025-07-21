@@ -21,7 +21,6 @@ typedef struct stQuadra {
 } stQuadra;
 
 
-
 typedef struct stEsquina {
     char *nome;
     double x, y;
@@ -245,8 +244,6 @@ void setXEsquina(Esquina eq, double x) {
 void setYEsquina(Esquina eq, double y) {
     ((stEsquina*)eq)->y = y;
 }
-
-
 
 void calculaBoundingBoxEsquina(Esquina eq, double *x, double *y, double *w, double *h) {
     *x = getXEsquina(eq);

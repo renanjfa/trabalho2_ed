@@ -1,11 +1,14 @@
 #ifndef ENDERECOS_H
 #define ENDERECOS_H
 
-typedef void *Rua;  // nome, ldir, lesq, comp, velocidade
-typedef void *Quadra;   // nome, cep (nome, direcao, ), ancora x, y
+typedef void *Rua;  
+typedef void *Quadra;   
 typedef void *Esquina;
-// colocar as quadras em uma hashtable para consulta posterior
-
+/*
+    ENDERECOS.H
+    Módulo responsável por gerenciar 3 instâncias relacionadas a uma cidade: Rua, Quadra e Esquina.
+    Inclui operações básicas para cada instância (Métodos get, set e auxiliares).
+*/
 
 /* ----- CONSTRUTOR QUADRA ----- */
 

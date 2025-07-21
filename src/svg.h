@@ -12,6 +12,11 @@
 #include "lista.h"
 #include "registradores.h"
 
+/*
+    SVG.H
+    Módulo responsável por realizar operações de inserção de formas e paths em um svg dado.
+*/
+
 
 void printSVGCabecalho(FILE *svg);
 
@@ -31,8 +36,7 @@ void printPathCMCSVG(FILE *svg, Percurso p, char *nomepath);
 
 void printPathCMRSVG(FILE *svg, Percurso p, char *nomepath);
 
-
-void printAnimationSVG(FILE *svg, char *idpath);
+void printAnimationSVG(FILE *svg, char *idpath, double animationTime);
 
 
 #endif
