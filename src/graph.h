@@ -47,7 +47,7 @@ typedef bool (*dfsRestarted)(Graph g, void *extra);
 
 typedef double (*FuncCusto)(Info dados);
 
-void printGraph(Graph g, FuncCusto extraiPeso);
+//void printGraph(Graph g, FuncCusto extraiPeso);
 
 
 
@@ -84,13 +84,15 @@ bool getDirected(Graph g);
 /*
     Adiciona um novo vértice ao grafo "g" com o nome "nome".
  */
-Node addNode(Graph g, char *nome, Info info);
+Node addNode(Graph g, char *nome, double x, double y, Info info);
 
 
 /*
     Retorna no' cujo de nome e' "nome". 
  */
 Node getNode(Graph g, char *nome);
+
+void getNodeCoordinates(Graph g, Node node, double *x, double *y);
 
 
 /*
