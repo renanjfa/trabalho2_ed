@@ -74,8 +74,6 @@ void shw(FILE* svg, char *np, char *cmc, char *cmr, HashTable percursos) {
         for(Celula p = getInicioLista(path_cmc); getProxCelula(p) != NULL && p != NULL; p = getProxCelula(p)) {
             Coordenadas inicio = getConteudoCelula(p);
             Coordenadas fim = getConteudoCelula(getProxCelula(p));
-            printf("TAMANHO LISTA CMC: %d\n", getTamanhoLista(path_cmc));
-    
             
             Linha l1 = criarLinha(27, getXCoord(inicio)+3, getYCoord(inicio)+3, getXCoord(fim)+3, getYCoord(fim)+3, cmc, false);
             setSWLinha(l1, 6);

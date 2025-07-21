@@ -456,7 +456,7 @@ Node addNode(Graph g, char *nome, double x, double y, Info info) {
 void dijkstra(Graph g, char *nomeOrigem, char *nomeDestino, int* caminho, int* tamCaminho, FuncCusto extraiPeso) {
     if(!g || !caminho) return;
 
-    printf("DIJKSTRA OTIMIZADO COM HEURÍSTICA EUCLIDIANA:\n");
+    //printf("DIJKSTRA OTIMIZADO COM HEURÍSTICA EUCLIDIANA:\n");
 
     int n = getTotalNodes(g);
     double* dist = malloc(n * sizeof(double));
