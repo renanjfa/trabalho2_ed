@@ -79,7 +79,7 @@ int main(int argc, char* argv[]) {
         // leitura via e inserir em graph e inserir em smutreap
     char *nomevia = getNomeVia(arquivoVia);
     Graph g;
-    SmuTreap smuVertices = newSmuTreap(100, 1, 0.000000000000000001, 100000);
+    SmuTreap smuVertices = newSmuTreap(100, 1, 0.00001, 100000);
 
     if(existevia) {
         char *entradavia = (char*)malloc(sizeof(char)*(strlen(dirEntrada)+strlen(arquivoQry)+2));

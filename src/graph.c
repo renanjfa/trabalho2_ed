@@ -374,7 +374,6 @@ void dijkstra(Graph g, char *nomeOrigem, char *nomeDestino, int* caminho, int* t
 
     int n = getTotalNodes(g);
     int MAX = getMaxNodes(g);
-    printf("N: %d\nMAX: %d\n", n, MAX);
     if(n<=0) return;
     double* dist = malloc(n * sizeof(double));
     double* distHeuristica = malloc(n * sizeof(double)); // Distância + Distância Euclidiana
@@ -385,7 +384,6 @@ void dijkstra(Graph g, char *nomeOrigem, char *nomeDestino, int* caminho, int* t
     double xDest = 0, yDest = 0;
     getNodeCoordinates(g, destino, &xDest, &yDest);
 
-    printf("DIJK passagem coords\n");
 
     for (int i = 0; i < n; i++) {
         dist[i] = DBL_MAX;
@@ -405,7 +403,6 @@ void dijkstra(Graph g, char *nomeOrigem, char *nomeDestino, int* caminho, int* t
     distHeuristica[origem] = heuristicaOrig; // dist euclidiana para priorização
     insertMinHeap(heap, origem, distHeuristica[origem]);
     
-    printf("antes do loop\n");
 
     if(!heap) printf("HEAP NULA\n");
 
@@ -474,7 +471,6 @@ void dijkstra(Graph g, char *nomeOrigem, char *nomeDestino, int* caminho, int* t
 
 void createSubgraphDG(Graph g, char *nomeSubgrafo, char *nomesVerts[], int nVert, bool comArestas) {
     if(!g || !nomeSubgrafo || !nomesVerts || nVert <= 0) return;
-    printf("nVerts: %d\n", nVert);
 
     Graph sub = createGraph(nVert, true, nomeSubgrafo);
     if(!sub) return; 
@@ -512,7 +508,6 @@ void createSubgraphDG(Graph g, char *nomeSubgrafo, char *nomesVerts[], int nVert
         insertHashTable(presentes, nomesVerts[i], node);
     }
 
-    printf("TOTAL NODES CREATESUB: %d\n", getTotalNodes(sub));
 
     if(comArestas) { 
         for (int i = 0; i < nVert; i++) {

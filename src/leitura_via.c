@@ -21,8 +21,6 @@ Graph LeituraCompletaVia(FILE *arqvia, SmuTreap t) {
     fscanf(arqvia, "%d", &nVert);
     Graph g = createGraph(nVert, true, "-");
 
-    printf("passou criar grafo\n");
-
     char linha[MAX_SIZE];
     char aux[MAX_SIZE];
 
