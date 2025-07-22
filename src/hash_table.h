@@ -25,9 +25,6 @@ ConteudoHashNode buscaHashTable(HashTable tabela, char *key);
 
 int getOrCreateNode(HashTable tabela, char *key, int *proxId);
 
-
-
-
 void destroiHashTable(HashTable tabela);
 
 

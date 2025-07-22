@@ -108,6 +108,9 @@ void setYEsquina(Esquina eq, double y);
 
 /* ----- METODOS EXTRAS AUXILIARES ESQUINA ----- */
 
+/*
+    Calcula as características de um Bounding Box associado a uma Esquina eq. 
+*/
 void calculaBoundingBoxEsquina(Esquina eq, double *x, double *y, double *w, double *h);
 
 

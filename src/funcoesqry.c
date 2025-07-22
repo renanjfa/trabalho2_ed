@@ -34,7 +34,7 @@ void registrarEndereco(FILE* svg, FILE* txt, HashTable enderecos, HashTable quad
     insertTextSVG(svg, t1);
     insertTextSVG(svg, t2);
 
-    Circulo c = criarCirculo(27, x, y, 3, "black", "orange");
+    Circulo c = criarCirculo(27, x, y, 6, "black", "orange");
 
     insertCircleSVG(svg, c);
     free(c); free(ts); free(t1); free(t2); free(l1); free(l2);
@@ -105,8 +105,8 @@ void shw(FILE* svg, char *np, char *cmc, char *cmr, HashTable percursos) {
         printPathCMCSVG(svg, p, path_name_cmc);
         printPathCMRSVG(svg, p, path_name_cmr);
     
-        printAnimationSVG(svg, path_name_cmc, 15);
-        printAnimationSVG(svg, path_name_cmr, 10);
+        printAnimationSVG(svg, path_name_cmc, 16);
+        printAnimationSVG(svg, path_name_cmr, 8);
     }
 }
 
@@ -196,27 +196,32 @@ double extraiVelocidade(Rua r) {
 
 
 void inserirPathsPercursos(FILE* txt, Graph g, int *cmc, int *cmr, int tam_cmc, int tam_cmr, Percurso p) {
-    fprintf(txt, "Caminho Mais Curto (CMC): ");
-
+    bool inal = false;
+    if(tam_cmc == 1 || tam_cmr == 1) {
+        fprintf(txt, "SEM DESTINO\n");
+        inal = true;
+    }
+    
+    if(!inal) fprintf(txt, "Caminho Mais Curto (CMC): ");
     for(int i = 0; i<tam_cmc; i++) {
 
         Esquina e = getNodeInfo(g, cmc[i]);
         if(!e) return;
 
         Coordenadas c = createCoordenadas(getXEsquina(e), getYEsquina(e));
-        fprintf(txt, "(%.2lf, %.2lf) ", getXEsquina(e), getYEsquina(e));
+        if(!inal) fprintf(txt, "(%.2lf, %.2lf) ", getXEsquina(e), getYEsquina(e));
         insertPathCMCPercurso(p, c);
     }
-    fprintf(txt, "\n");
+    if(!inal) fprintf(txt, "\n");
 
-    fprintf(txt, "Caminho Mais Rapido (CMR): ");
+    if(!inal) fprintf(txt, "Caminho Mais Rapido (CMR): ");
     for(int i = 0; i<tam_cmr; i++) {
 
         Esquina e = getNodeInfo(g, cmr[i]);
         if(!e) return;
 
         Coordenadas c = createCoordenadas(getXEsquina(e), getYEsquina(e));
-        fprintf(txt, "(%.2lf, %.2lf) ", getXEsquina(e), getYEsquina(e));
+        if(!inal) fprintf(txt, "(%.2lf, %.2lf) ", getXEsquina(e), getYEsquina(e));
         insertPathCMRPercurso(p, c);
     }
     fprintf(txt, "\n\n");

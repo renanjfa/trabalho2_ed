@@ -160,6 +160,14 @@ Endereco getDestinoPercurso(Percurso p) {
     return ((stPercurso*)p)->destino;
 }
 
+void setOrigemPercurso(Percurso p, Endereco e) {
+    ((stPercurso*)p)->origem = e;
+}
+
+void setDestinoPercurso(Percurso p, Endereco e) {
+    ((stPercurso*)p)->destino = e;
+}
+
 
 void setNomePercurso(Percurso p, char *nome) {
     strcpy(((stPercurso*)p)->nome, nome);
