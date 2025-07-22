@@ -242,8 +242,8 @@ void registrarPercurso(FILE* txt, Graph g, SmuTreap t, HashTable enderecos, Hash
         int tam_cmc;
         int tam_cmr; 
 
-        dijkstra(g, getNomeEsquina(e2), getNomeEsquina(e1), cmc, &tam_cmc, extraiComprimento);
-        dijkstra(g, getNomeEsquina(e2), getNomeEsquina(e1), cmr, &tam_cmr, extraiVelocidade);
+        dijkstraAEstrela(g, getNomeEsquina(e2), getNomeEsquina(e1), cmc, &tam_cmc, extraiComprimento);
+        dijkstraAEstrela(g, getNomeEsquina(e2), getNomeEsquina(e1), cmr, &tam_cmr, extraiVelocidade);
 
         inserirPathsPercursos(txt, g, cmc, cmr, tam_cmc, tam_cmr, p);
     } 
@@ -255,8 +255,8 @@ void registrarPercurso(FILE* txt, Graph g, SmuTreap t, HashTable enderecos, Hash
         int tam_cmc_sub;
         int tam_cmr_sub;
 
-        dijkstra(sub, getNomeEsquina(e2), getNomeEsquina(e1), cmc_sub, &tam_cmc_sub, extraiComprimento);
-        dijkstra(sub, getNomeEsquina(e2), getNomeEsquina(e1), cmr_sub, &tam_cmr_sub, extraiVelocidade);
+        dijkstraAEstrela(sub, getNomeEsquina(e2), getNomeEsquina(e1), cmc_sub, &tam_cmc_sub, extraiComprimento);
+        dijkstraAEstrela(sub, getNomeEsquina(e2), getNomeEsquina(e1), cmr_sub, &tam_cmr_sub, extraiVelocidade);
         inserirPathsPercursos(txt, sub, cmc_sub, cmr_sub, tam_cmc_sub, tam_cmr_sub, p);
     }
 }
@@ -283,8 +283,8 @@ void join(FILE* txt, Graph g, SmuTreap t, HashTable percursos, char *np, char *n
     int tam_cmc;
     int tam_cmr;
 
-    dijkstra(g, getNomeEsquina(eq2), getNomeEsquina(eq1), cmc, &tam_cmc, extraiComprimento);
-    dijkstra(g, getNomeEsquina(eq2), getNomeEsquina(eq1), cmr, &tam_cmr, extraiVelocidade);
+    dijkstraAEstrela(g, getNomeEsquina(eq2), getNomeEsquina(eq1), cmc, &tam_cmc, extraiComprimento);
+    dijkstraAEstrela(g, getNomeEsquina(eq2), getNomeEsquina(eq1), cmr, &tam_cmr, extraiVelocidade);
 
     fprintf(txt, "Caminho Mais Curto (CMC): ");
     for(int i = 0; i<tam_cmc; i++) {
@@ -335,7 +335,7 @@ void sg(FILE* svg, Graph g, SmuTreap t, char *nome, double x, double y, double w
         i++;
     }
 
-    createSubgraphDG(g, nome, nomesVerts, nVert, true);
+    createSubgraphDG(g, nome, nomesVerts, nVert, getDirected(g));
     Linha l1 = criarLinha(27, x, y, x+w, y, "red", true);
     Linha l2 = criarLinha(27, x, y, x, y+h, "red", true);
     Linha l3 = criarLinha(27, x+w, y, x+w, y+h, "red", true);

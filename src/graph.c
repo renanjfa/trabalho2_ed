@@ -369,7 +369,7 @@ Node addNode(Graph g, char *nome, double x, double y, Info info) {
 }
 
 
-void dijkstra(Graph g, char *nomeOrigem, char *nomeDestino, int* caminho, int* tamCaminho, FuncCusto extraiPeso) {
+void dijkstraAEstrela(Graph g, char *nomeOrigem, char *nomeDestino, int* caminho, int* tamCaminho, FuncCusto extraiPeso) {
     if(!g || !caminho) return;
 
     int n = getTotalNodes(g);
@@ -472,7 +472,7 @@ void dijkstra(Graph g, char *nomeOrigem, char *nomeDestino, int* caminho, int* t
 void createSubgraphDG(Graph g, char *nomeSubgrafo, char *nomesVerts[], int nVert, bool comArestas) {
     if(!g || !nomeSubgrafo || !nomesVerts || nVert <= 0) return;
 
-    Graph sub = createGraph(nVert, true, nomeSubgrafo);
+    Graph sub = createGraph(nVert, getDirected(g), nomeSubgrafo);
     if(!sub) return; 
     
     insertHashTable(((stGraph*)g)->subgrafos, nomeSubgrafo, sub);

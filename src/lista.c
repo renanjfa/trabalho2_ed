@@ -67,14 +67,14 @@ void copiaListas(Lista copia, Lista fonte) {
 void liberaLista(Lista l) {
     if (l == NULL) return;
     
-    Celula atual = ((stLista*)l)->inicio;  // Assumindo que Lista tem um campo 'inicio'
+    Celula atual = ((stLista*)l)->inicio;  
     while (atual != NULL) {
         Celula proximo = ((stCelula*)atual)->prox;
-        free(atual);  // Libera o próprio nó
+        free(atual);  
         atual = proximo;
     }
     
-    free(l);  // Libera a estrutura da lista
+    free(l);  
 }
 
 Celula getProxCelula(Celula p) {

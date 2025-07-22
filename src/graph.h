@@ -200,7 +200,7 @@ void getEdges(Graph g, Lista arestas);
    Algoritmo de caminho mínimo dijkstra otimizado para busca espacial.
    A função utiliza os nomes dos Nodes: origem e destino. Retornam o caminho feito no vetor caminho[]. 
 */
-void dijkstra(Graph g, char *origem, char *destino, int* caminho, int* tamCaminho, FuncCusto extraiPeso);
+void dijkstraAEstrela(Graph g, char *origem, char *destino, int* caminho, int* tamCaminho, FuncCusto extraiPeso);
 
 /*
    Faz percurso em profundidade sobre  g, a partir do no' node, classificando 
