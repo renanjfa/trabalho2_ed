@@ -38,6 +38,7 @@ void registrarEndereco(FILE* svg, FILE* txt, HashTable enderecos, HashTable quad
 
     insertCircleSVG(svg, c);
     free(c); free(ts); free(t1); free(t2); free(l1); free(l2);
+    printf("saiu @o?\n");
 }
 
 
@@ -108,6 +109,7 @@ void shw(FILE* svg, char *np, char *cmc, char *cmr, HashTable percursos) {
         printAnimationSVG(svg, path_name_cmc, 15);
         printAnimationSVG(svg, path_name_cmr, 10);
     }
+    printf("saiu shw\n");
 }
 
 
@@ -162,6 +164,7 @@ void alag(FILE* svg, FILE* txt, Graph g, SmuTreap t, int n, double x, double y, 
     }
 
     desabilitarArestasAlagadas(g, arestasN[n], svg, txt);
+    printf("saiu alag\n");
 }
 
 void dren(FILE *txt, Graph g, int n, Lista *arestasN) {
@@ -183,6 +186,7 @@ void dren(FILE *txt, Graph g, int n, Lista *arestasN) {
         fprintf(txt, "%s -> %s Lados: %s(DIR) %s(ESQ) Comp: %.2lf VelocM: %.2lf NomeRua: %s\n", getNomeEsquina(eq_from), getNomeEsquina(eq_to), getLDIRRua(r), getLESQRua(r), getComprimentoRua(r), getVelocidadeRua(r), getNomeRUa(r));
     }
     fprintf(txt, "\n");
+    printf("saiu dren\n");
 }
 
 
@@ -197,9 +201,11 @@ double extraiVelocidade(Rua r) {
 
 void inserirPathsPercursos(FILE* txt, Graph g, int *cmc, int *cmr, int tam_cmc, int tam_cmr, Percurso p) {
     fprintf(txt, "Caminho Mais Curto (CMC): ");
+
     for(int i = 0; i<tam_cmc; i++) {
 
         Esquina e = getNodeInfo(g, cmc[i]);
+        if(!e) return;
 
         Coordenadas c = createCoordenadas(getXEsquina(e), getYEsquina(e));
         fprintf(txt, "(%.2lf, %.2lf) ", getXEsquina(e), getYEsquina(e));
@@ -211,6 +217,7 @@ void inserirPathsPercursos(FILE* txt, Graph g, int *cmc, int *cmr, int tam_cmc, 
     for(int i = 0; i<tam_cmr; i++) {
 
         Esquina e = getNodeInfo(g, cmr[i]);
+        if(!e) return;
 
         Coordenadas c = createCoordenadas(getXEsquina(e), getYEsquina(e));
         fprintf(txt, "(%.2lf, %.2lf) ", getXEsquina(e), getYEsquina(e));
@@ -246,17 +253,20 @@ void registrarPercurso(FILE* txt, Graph g, SmuTreap t, HashTable enderecos, Hash
     } 
     else {
         Graph sub = produceGraph(g, nome);
+        printf("produce graph %s\n", nome);
 
         int *cmc_sub = malloc(getTotalNodes(sub) * sizeof(int));
         int *cmr_sub = malloc(getTotalNodes(sub) * sizeof(int));
         int tam_cmc_sub;
         int tam_cmr_sub;
+        printf("cmrs e cmcs\n");
 
         dijkstra(sub, getNomeEsquina(e2), getNomeEsquina(e1), cmc_sub, &tam_cmc_sub, extraiComprimento);
         dijkstra(sub, getNomeEsquina(e2), getNomeEsquina(e1), cmr_sub, &tam_cmr_sub, extraiVelocidade);
-
+        printf("passou dijkstras\n");
         inserirPathsPercursos(txt, sub, cmc_sub, cmr_sub, tam_cmc_sub, tam_cmr_sub, p);
     }
+    printf("saiu p?\n");
 }
 
 
@@ -305,6 +315,7 @@ void join(FILE* txt, Graph g, SmuTreap t, HashTable percursos, char *np, char *n
         insertPathCMRPercurso(p, c);
     }
     fprintf(txt, "\n\n");
+    printf("saiu join\n");
 }
 
 
@@ -315,7 +326,9 @@ void sg(FILE* svg, Graph g, SmuTreap t, char *nome, double x, double y, double w
     Lista internos = criaLista();
     getInfosDentroRegiaoSmuT(t, x, y, w, h, BBinternoRegiao, internos);
 
+
     int nVert = getTamanhoLista(internos);
+    printf("TAMANHO INTERNOS: %d\n", nVert);
     char **nomesVerts = malloc(nVert * sizeof(char*));
     for(int i = 0; i<nVert; i++) {
         nomesVerts[i] = malloc(100*sizeof(char));
@@ -332,7 +345,7 @@ void sg(FILE* svg, Graph g, SmuTreap t, char *nome, double x, double y, double w
         i++;
     }
 
-    createSubgraphDG(g, nome, nomesVerts, nVert, getDirected(g));
+    createSubgraphDG(g, nome, nomesVerts, nVert, true);
     Linha l1 = criarLinha(27, x, y, x+w, y, "red", true);
     Linha l2 = criarLinha(27, x, y, x, y+h, "red", true);
     Linha l3 = criarLinha(27, x+w, y, x+w, y+h, "red", true);
@@ -342,5 +355,6 @@ void sg(FILE* svg, Graph g, SmuTreap t, char *nome, double x, double y, double w
     insertLineSVG(svg, l2);
     insertLineSVG(svg, l3);
     insertLineSVG(svg, l4);
+    printf("saiu sg\n");
 }
 

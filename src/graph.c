@@ -373,6 +373,9 @@ void dijkstra(Graph g, char *nomeOrigem, char *nomeDestino, int* caminho, int* t
     if(!g || !caminho) return;
 
     int n = getTotalNodes(g);
+    int MAX = getMaxNodes(g);
+    printf("N: %d\nMAX: %d\n", n, MAX);
+    if(n<=0) return;
     double* dist = malloc(n * sizeof(double));
     double* distHeuristica = malloc(n * sizeof(double)); // Distância + Distância Euclidiana
     int* anterior = malloc(n * sizeof(int));
@@ -381,6 +384,8 @@ void dijkstra(Graph g, char *nomeOrigem, char *nomeDestino, int* caminho, int* t
     Node destino = getNode(g, nomeDestino);
     double xDest = 0, yDest = 0;
     getNodeCoordinates(g, destino, &xDest, &yDest);
+
+    printf("DIJK passagem coords\n");
 
     for (int i = 0; i < n; i++) {
         dist[i] = DBL_MAX;
@@ -400,6 +405,9 @@ void dijkstra(Graph g, char *nomeOrigem, char *nomeDestino, int* caminho, int* t
     distHeuristica[origem] = heuristicaOrig; // dist euclidiana para priorização
     insertMinHeap(heap, origem, distHeuristica[origem]);
     
+    printf("antes do loop\n");
+
+    if(!heap) printf("HEAP NULA\n");
 
     while (!isMinHeapEmpty(heap)) {
         int u = extractMinV(heap);
@@ -466,8 +474,9 @@ void dijkstra(Graph g, char *nomeOrigem, char *nomeDestino, int* caminho, int* t
 
 void createSubgraphDG(Graph g, char *nomeSubgrafo, char *nomesVerts[], int nVert, bool comArestas) {
     if(!g || !nomeSubgrafo || !nomesVerts || nVert <= 0) return;
+    printf("nVerts: %d\n", nVert);
 
-    Graph sub = createGraph(nVert, ((stGraph*)g)->directed, nomeSubgrafo);
+    Graph sub = createGraph(nVert, true, nomeSubgrafo);
     if(!sub) return; 
     
     insertHashTable(((stGraph*)g)->subgrafos, nomeSubgrafo, sub);
@@ -481,7 +490,7 @@ void createSubgraphDG(Graph g, char *nomeSubgrafo, char *nomesVerts[], int nVert
     // verifica se todos os vértices existem no grafo original
     for (int i = 0; i < nVert; i++) {
         Node node = getNode(g, nomesVerts[i]);
-        if(!node) {
+        if(node == -1) {
             destroiHashTable(presentes);
             return;
         }
@@ -490,7 +499,10 @@ void createSubgraphDG(Graph g, char *nomeSubgrafo, char *nomesVerts[], int nVert
     // Adiciona vértices ao subgrafo
     for (int i = 0; i < nVert; i++) {
         Node node = getNode(g, nomesVerts[i]);
+        if(node == -1)
+            printf("ERRO: vértice '%s' não encontrado no grafo original!\n", nomesVerts[i]);
         Info info = getNodeInfo(g, node);
+        if (!info) printf("Info do Node isolado '%s' é NULL!\n", nomesVerts[i]);
 
         double x = -1.0;
         double y = -1.0;
@@ -499,6 +511,8 @@ void createSubgraphDG(Graph g, char *nomeSubgrafo, char *nomesVerts[], int nVert
         addNode(sub, nomesVerts[i], x, y, info);
         insertHashTable(presentes, nomesVerts[i], node);
     }
+
+    printf("TOTAL NODES CREATESUB: %d\n", getTotalNodes(sub));
 
     if(comArestas) { 
         for (int i = 0; i < nVert; i++) {
