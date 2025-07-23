@@ -521,7 +521,10 @@ bool bfs(Graph g, Node start, procEdge discoverNode, void *extra) {
     while (front < rear) {
         Node u = queue[front++];
 
-        Celula atual = getInicioLista(getAdjacentes(g, u));
+        Lista l = criaLista();
+        adjacentEdges(g, u, l);
+
+        Celula atual = getInicioLista(l);
         while (atual != NULL) {
             Edge e = getConteudoCelula(atual);
             atual = getProxCelula(atual);
