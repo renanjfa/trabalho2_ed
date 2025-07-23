@@ -165,7 +165,7 @@ void setEdgeInfo(Graph g, Edge e, Info info) {
     ((stEdge*)e)->dados = info;
 }
 
-// fazer verificacao se o vertice from ou to existem
+
 Edge addEdge(Graph g, Node from, Node to, Info info) {
     if (!g || !info) return NULL;
 
@@ -195,7 +195,7 @@ Edge addEdge(Graph g, Node from, Node to, Info info) {
         stEdge *reverse_edge = malloc(sizeof(stEdge));
         reverse_edge->from = to;
         reverse_edge->to = from;
-        reverse_edge->dados = info; // ou duplicar com copiaInfo(info)
+        reverse_edge->dados = info; 
         reverse_edge->habilitado = true;
 
         insereLista(graph->vertices[to]->adjacentes, reverse_edge);
@@ -327,10 +327,8 @@ Node getNode(Graph g, char *nome) {
 Node addNode(Graph g, char *nome, double x, double y, Info info) {
     if (!g || !nome || !info) return -1;
 
-    // Garante que nome válido
     Node idx = getOrCreateNode(((stGraph*)g)->nomesToNodes, nome, &((stGraph*)g)->proxID);
 
-    // Verifica se o índice está dentro do limite
     if (idx < 0 || idx >= ((stGraph*)g)->maxNodes) {
         fprintf(stderr, "Erro: índice %d fora do limite da capacidade (%d).\n", idx, ((stGraph*)g)->maxNodes);
         exit(1);
@@ -345,10 +343,8 @@ Node addNode(Graph g, char *nome, double x, double y, Info info) {
         }
     }
 
-    // Marca como adicionado
     ((stGraph*)g)->vertices[idx]->adicionado = true;
 
-    // Copia nome
     ((stGraph*)g)->vertices[idx]->nome = malloc(strlen(nome) + 1);
     if (!((stGraph*)g)->vertices[idx]->nome) {
         fprintf(stderr, "Erro ao alocar nome do vértice.\n");
@@ -356,13 +352,11 @@ Node addNode(Graph g, char *nome, double x, double y, Info info) {
     }
     strcpy(((stGraph*)g)->vertices[idx]->nome, nome);
 
-    // Atribui info
     ((stGraph*)g)->vertices[idx]->x = x;
     ((stGraph*)g)->vertices[idx]->y = y;
 
     setNodeInfo(g, idx, info);
 
-    // Atualiza total
     ((stGraph*)g)->totalNodes++;
 
     return idx;
@@ -592,9 +586,7 @@ bool dfsVisit(Graph g, Node u, DfsData *data, procEdge treeEdge, procEdge forwar
 }
 
 
-bool dfs(Graph g, Node start,
-         procEdge treeEdge, procEdge forwardEdge, procEdge returnEdge, procEdge crossEdge,
-         dfsRestarted newTree, void *extra) {
+bool dfs(Graph g, Node start, procEdge treeEdge, procEdge forwardEdge, procEdge returnEdge, procEdge crossEdge, dfsRestarted newTree, void *extra) {
     if (!g) return false;
 
     int n = getMaxNodes(g);
