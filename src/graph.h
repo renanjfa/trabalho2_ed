@@ -245,18 +245,20 @@ void createSubgraphDG(Graph g, char *nomeSubgrafo, char *nomesVerts[], int nVert
  */
 Edge includeEdgeSDG(Graph g, char *nomeSubgrafo, Edge e);
 
+
+/*
+Retira a aresta "e" do subgrafo "nomeSubgrafo". Ou seja, desfaz a correspondente 
+operacao includeEdgeSg previamente executada. 
+Note que a aresta  "e" NAO e' removida do grafo g.
+*/
+void excludeEdgeSDG(Graph g, char *nomeSubgrafo, Edge e);
+
+
 /*
   Retorna verdadeiro se a aresta "e" pertence ao subgrafo "nomeSubgrafo" do grafo g; 
   falso, caso contrario.
  */
 bool existsEdgeSDG(Graph g, char *nomeSubgrafo, Edge e);
-
-/*
-  Retira a aresta "e" do subgrafo "nomeSubgrafo". Ou seja, desfaz a correspondente 
-  operacao includeEdgeSg previamente executada. 
-  Note que a aresta  "e" NAO e' removida do grafo g.
- */
-void excludeEdgeSDG(Graph g, char *nomeSubgrafo, Edge e);
 
 /*
    Adiciona 'a lista "arestaAdjacentes" as arestas (x,y), tal que:

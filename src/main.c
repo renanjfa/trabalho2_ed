@@ -110,9 +110,7 @@ int main(int argc, char* argv[]) {
     }
 
     killSmuTreap(smuVertices);
-    // killGraph(g);
-    // liberar memoria do resto das estruturas
-
+    killDG(g);
 }
 
 /*

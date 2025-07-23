@@ -463,6 +463,52 @@ void dijkstraAEstrela(Graph g, char *nomeOrigem, char *nomeDestino, int* caminho
     free(heap);
 }
 
+
+
+void killDG(Graph g) {
+    if (!g) return;
+
+    stGraph* grafo = (stGraph*)g;
+
+    for (int i = 0; i < grafo->maxNodes; i++) {
+        Vertex v = grafo->vertices[i];
+        if (v && v->adicionado) {
+
+            // Libera as arestas da lista de adjacência
+            if (v->adjacentes) {
+                for (Celula p = getInicioLista(v->adjacentes); p != NULL;) {
+                    Celula prox = getProxCelula(p);
+                    Edge e = getConteudoCelula(p);
+                    if (e) {
+                        free(((stEdge*)e)->dados);
+                        free(e);
+                    }
+                    p = prox;
+                }
+
+                liberaLista(v->adjacentes);
+            }
+
+            // Libera o próprio vértice
+            free(v);
+        }
+    }
+
+    // Libera o vetor de vértices
+    free(grafo->vertices);
+
+    // Libera o nome do grafo, se tiver sido alocado
+    if (grafo->nome) {
+        free(grafo->nome);
+    }
+
+    // Libera a estrutura do grafo
+    free(grafo);
+}
+
+
+
+
 /*
  **********************
     SUB-GRAFOS
@@ -542,43 +588,103 @@ void createSubgraphDG(Graph g, char *nomeSubgrafo, char *nomesVerts[], int nVert
 
 
 
-// Edge includeEdgeSDG(Graph g, char *nomeSubgrafo, Edge e) {
-//     if(!g || !nomeSubgrafo || !e) return;
+Edge includeEdgeSDG(Graph g, char *nomeSubgrafo, Edge e) {
+    if(!g || !nomeSubgrafo || !e) return;
 
-//     int idx_subgraph = (int)buscaHashTable(((stGraph*)g)->nomesToSubgraphs, nomeSubgrafo);
+    Graph sub = buscaHashTable(((stGraph*)g)->subgrafos, nomeSubgrafo);
 
-//     Graph sub = ((stGraph*)g)->subgrafos[idx_subgraph];
+    Node from = getFromNode(g, e);
+    Node to = getToNode(g, e);
+    Info info = getEdgeInfo(g, e);
 
-//     Node from = getFromNode(g, e);
-//     Node to = getToNode(g, e);
-//     Info info = getEdgeInfo(g, e);
+    Edge new_edge = addEdge(g, from, to, info);
+    return new_edge;
+}
 
-//     Edge new_edge = addEdge(g, from, to, info);
-//     return new_edge;
-// }
+void excludeEdgeSDG(Graph g, char *nomeSubgrafo, Edge e) {
+    if(!g || !nomeSubgrafo || !e) return;
 
-// void excludeEdgeSDG(Graph g, char *nomeSubgrafo, Edge e) {
-//     if(!g || !nomeSubgrafo || !e) return;
+    Graph sub = buscaHashTable(((stGraph*)g)->subgrafos, nomeSubgrafo);
 
-//     int idx_subgraph = (int)buscaHashTable(((stGraph*)g)->nomesToSubgraphs, nomeSubgrafo);
+    Node from = getFromNode(g, e);
 
-//     Graph sub = ((stGraph*)g)->subgrafos[idx_subgraph];
+    Celula anterior = NULL;
+    Celula inicio = getInicioLista(((stGraph*)sub)->vertices[from]->adjacentes);
+    for(Celula p = inicio; p != NULL; p = getProxCelula(p)) {
 
-//     Node from = getFromNode(g, e);
+        Node to_p = getToNode(g, getConteudoCelula(p));
+        if(to_p == getToNode(g, e)) {
+            removeCelula(((stGraph*)g)->vertices[from]->adjacentes, p, anterior);
+            return;
+        }
 
-//     Celula anterior = NULL;
-//     Celula inicio = getInicioLista(((stGraph*)sub)->vertices[from]->adjacentes);
-//     for(Celula p = inicio; p != NULL; p = getProxCelula(p)) {
+        anterior = p;
+    }
+}
 
-//         Node to_p = getToNode(g, getConteudoCelula(p));
-//         if(to_p == getToNode(g, e)) {
-//             removeCelula(((stGraph*)g)->vertices[from]->adjacentes, p, anterior);
-//             return;
-//         }
 
-//         anterior = p;
-//     }
-// }
+void getAllNodesSDG(Graph g, char *nomeSubgrafo, Lista lstNodes) {
+    if(!g || !nomeSubgrafo || !lstNodes) return;
+
+    Graph sub = buscaHashTable(((stGraph*)g)->subgrafos, nomeSubgrafo);
+
+    for(int i = 0; i < getMaxNodes(g); i++) {
+        insereLista(lstNodes, ((stGraph*)sub)->vertices[i]);
+    }
+
+}
+
+
+void getAllEdgesSDG(Graph g, char *nomeSubgrafo, Lista lstEdges) {
+    if(!g || !nomeSubgrafo || !lstEdges) return;
+
+    Graph sub = buscaHashTable(((stGraph*)g)->subgrafos, nomeSubgrafo);
+
+    for(int i = 0; i < getMaxNodes(g); i++) {
+        
+        if(!((stGraph*)sub)->vertices[i]->adicionado) continue;
+
+        Celula inicio = getInicioLista(((stGraph*)sub)->vertices[i]->adjacentes);
+        for(Celula p = inicio; p!=NULL; p = getProxCelula(p)) {
+            Edge e = getConteudoCelula(p);
+            insereLista(lstEdges, e);
+        }
+    }
+}
+
+void adjacentEdgesSDG(Graph g, char *nomeSubgrafo, Node node, Lista arestasAdjacentes) {
+    if(!g || !arestasAdjacentes || node < 0) return;
+
+    Graph sub = buscaHashTable(((stGraph*)g)->subgrafos, nomeSubgrafo);
+
+    Celula inicio = getInicioLista(((stGraph*)sub)->vertices[node]->adjacentes);
+    for(Celula p = inicio; p!=NULL; p = getProxCelula(p)) {
+        Edge e = getConteudoCelula(p);
+        insereLista(arestasAdjacentes, e);
+    }
+    
+}
+
+
+bool existsEdgeSDG(Graph g, char *nomeSubgrafo, Edge e) {
+    Graph sub = buscaHashTable(((stGraph*)g)->subgrafos, nomeSubgrafo);
+
+    for(int i = 0; i < getMaxNodes(g); i++) {
+        
+        if(!((stGraph*)sub)->vertices[i]->adicionado) continue;
+
+        Celula inicio = getInicioLista(((stGraph*)sub)->vertices[i]->adjacentes);
+        for(Celula p = inicio; p!=NULL; p = getProxCelula(p)) {
+            Edge atual = getConteudoCelula(p);
+            if(e == atual)
+                return true;
+        }
+    }
+    return false;
+}
+
+
+
 
 Graph produceGraph(Graph g, char *nomeSubgrafo) {
     if(!g || !nomeSubgrafo) return NULL;

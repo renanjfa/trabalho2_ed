@@ -88,3 +88,5 @@ c2:
 	$(EXEC_TESTS) -e $(ENTRADA) -f c2.geo -o $(SAIDA) -q c2/09-perc-varios-joinall.qry -v c2-v.via
 	$(EXEC_TESTS) -e $(ENTRADA) -f c2.geo -o $(SAIDA) -q c2/10-perc-smpl.qry -v c2-v.via
 
+val:
+	valgrind $(EXEC_TESTS) -e $(ENTRADA) -f c1.geo -o $(SAIDA) -q c1/00-perc-smpl.qry -v c1-v.via

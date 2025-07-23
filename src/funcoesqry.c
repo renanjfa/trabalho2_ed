@@ -93,8 +93,8 @@ void shw(FILE* svg, char *np, char *cmc, char *cmr, HashTable percursos) {
     
     if(!inalcancavel) {
 
-        char *path_name_cmc = malloc((strlen(np)+5) * sizeof(char));
-        char *path_name_cmr = malloc((strlen(np)+5) * sizeof(char));
+        char *path_name_cmc = malloc((strlen(np)+50) * sizeof(char));
+        char *path_name_cmr = malloc((strlen(np)+50) * sizeof(char));
     
         strcpy(path_name_cmc, np);
         strcpy(path_name_cmr, np);
