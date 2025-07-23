@@ -507,6 +507,125 @@ void killDG(Graph g) {
 }
 
 
+bool bfs(Graph g, Node start, procEdge discoverNode, void *extra) {
+    if (!g || start == -1) return false;
+
+    int n = getMaxNodes(g);
+    bool *visited = calloc(n, sizeof(bool));
+    Node *queue = malloc(n * sizeof(Node));
+    int front = 0, rear = 0;
+
+    visited[start] = true;
+    queue[rear++] = start;
+
+    while (front < rear) {
+        Node u = queue[front++];
+
+        Celula atual = getInicioLista(getAdjacentes(g, u));
+        while (atual != NULL) {
+            Edge e = getConteudoCelula(atual);
+            atual = getProxCelula(atual);
+
+            Node v = getToNode(g, e);
+
+            if (!visited[v]) {
+                visited[v] = true;
+                queue[rear++] = v;
+                if (discoverNode && !discoverNode(g, e, -1, -1, extra)) {
+                    free(queue);
+                    free(visited);
+                    return false;
+                }
+            }
+        }
+    }
+
+    free(queue);
+    free(visited);
+    return true;
+}
+
+
+typedef enum { WHITE, GRAY, BLACK } Color;
+
+typedef struct {
+    int *cor;
+    int *td;
+    int *tf;
+    int tempo;
+} DfsData;
+
+bool dfsVisit(Graph g, Node u, DfsData *data, procEdge treeEdge, procEdge forwardEdge, procEdge returnEdge, procEdge crossEdge, void *extra) {
+    data->cor[u] = GRAY;
+    data->td[u] = ++data->tempo;
+
+    Lista l = criaLista();
+    adjacentEdges(g, u, l);
+
+    Celula atual = getInicioLista(l);
+    while (atual != NULL) {
+        Edge e = getConteudoCelula(atual);
+        atual = getProxCelula(atual);
+
+        Node v = getToNode(g, e); 
+
+        if (data->cor[v] == WHITE) {
+            if (treeEdge && !treeEdge(g, e, data->td[u], data->tf[u], extra)) return false;
+            if (!dfsVisit(g, v, data, treeEdge, forwardEdge, returnEdge, crossEdge, extra)) return false;
+        } else if (data->cor[v] == GRAY) {
+            if (returnEdge && !returnEdge(g, e, data->td[u], data->tf[u], extra)) return false;
+        } else if (data->cor[v] == BLACK) {
+            if (data->td[u] < data->td[v]) {
+                if (forwardEdge && !forwardEdge(g, e, data->td[u], data->tf[u], extra)) return false;
+            } else {
+                if (crossEdge && !crossEdge(g, e, data->td[u], data->tf[u], extra)) return false;
+            }
+        }
+    }
+
+    data->cor[u] = BLACK;
+    data->tf[u] = ++data->tempo;
+    return true;
+}
+
+
+bool dfs(Graph g, Node start,
+         procEdge treeEdge, procEdge forwardEdge, procEdge returnEdge, procEdge crossEdge,
+         dfsRestarted newTree, void *extra) {
+    if (!g) return false;
+
+    int n = getMaxNodes(g);
+
+    DfsData data;
+    data.cor = malloc(n * sizeof(int));
+    data.td = malloc(n * sizeof(int));
+    data.tf = malloc(n * sizeof(int));
+    data.tempo = 0;
+
+    for (int i = 0; i < n; i++) {
+        data.cor[i] = WHITE;
+        data.td[i] = data.tf[i] = -1;
+    }
+
+    // percorre todos os vértices acessíveis
+    for (int i = 0; i < n; i++) {
+        if (data.cor[i] == WHITE) {
+            if (newTree && !newTree(g, extra)) goto cleanup;
+            if (!dfsVisit(g, i, &data, treeEdge, forwardEdge, returnEdge, crossEdge, extra)) goto cleanup;
+        }
+    }
+
+    free(data.cor);
+    free(data.td);
+    free(data.tf);
+    return true;
+
+cleanup:
+    free(data.cor);
+    free(data.td);
+    free(data.tf);
+    return false;
+}
 
 
 /*

@@ -10,6 +10,7 @@
 #include "graph.h"
 #include "tratar_strings.h"
 
+
 int main(int argc, char* argv[]) {
     // criacao de strings para dirEntrada, dirSaida, arquivoGeo, arquivoQry, arquivoVia
     char *dirEntrada = NULL, *arquivoGeo = NULL, *arquivoVia = NULL, *arquivoQry = NULL, *dirSaida = NULL; 
@@ -59,7 +60,6 @@ int main(int argc, char* argv[]) {
     }
 
     // processa geo
-        // leitura geo e retornar hashtable com as quadras
     char *nomegeo = getNomeGeo(arquivoGeo);
     HashTable quadras;
 
@@ -76,7 +76,6 @@ int main(int argc, char* argv[]) {
     }
 
     // processa via
-        // leitura via e inserir em graph e inserir em smutreap
     char *nomevia = getNomeVia(arquivoVia);
     Graph g;
     SmuTreap smuVertices = newSmuTreap(100, 1, 0.00001, 100000);
@@ -92,7 +91,7 @@ int main(int argc, char* argv[]) {
         g = ProcessaVia(arquivoVia, smuVertices);
     }
 
-    // inicializacao de registradores de endereco, percurso
+    // inicializacao de registradores de endereco, percurso e regioes de arestasN
     HashTable enderecos = createHashTable(20);
     HashTable percursos = createHashTable(20);
 
@@ -103,7 +102,6 @@ int main(int argc, char* argv[]) {
 
 
     // processa qry 
-        // leitura e operacoes
     if(existeqry) {
         char* nomearqsaida = concatenaNomeQry(nomegeo, getNomeQry(arquivoQry));
         ProcessaQry(dirEntrada, dirSaida, nomearqsaida, arquivoQry, g, smuVertices, quadras, enderecos, percursos, arestasN);
@@ -111,6 +109,12 @@ int main(int argc, char* argv[]) {
 
     killSmuTreap(smuVertices);
     killDG(g);
+    destroiHashTable(percursos);
+    destroiHashTable(enderecos);
+    destroiHashTable(quadras);
+    for(int i = 0; i<100; i++) {
+        liberaLista(arestasN[i]);
+    }
 }
 
 /*
