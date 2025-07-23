@@ -76,7 +76,6 @@ int main(int argc, char* argv[]) {
     }
 
     // processa via
-    char *nomevia = getNomeVia(arquivoVia);
     Graph g;
     SmuTreap smuVertices = newSmuTreap(100, 1, 0.00001, 100000);
 
@@ -107,6 +106,7 @@ int main(int argc, char* argv[]) {
         ProcessaQry(dirEntrada, dirSaida, nomearqsaida, arquivoQry, g, smuVertices, quadras, enderecos, percursos, arestasN);
     }
 
+    // liberar memoria das estuturas utilizadas
     killSmuTreap(smuVertices);
     killDG(g);
     destroiHashTable(percursos);

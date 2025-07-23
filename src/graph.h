@@ -209,9 +209,6 @@ void dijkstraAEstrela(Graph g, char *origem, char *destino, int* caminho, int* t
    newTree e' invocada sempre que o percurso for retomado.
  */  
 bool dfs(Graph g, Node node, procEdge treeEdge, procEdge forwardEdge, procEdge returnEdge, procEdge crossEdge, dfsRestarted newTree, void *extra);
-   
-   //bool dfs(Graph g, Node node, treeEdge, forwardEdge, returnEdge,
-   //crossEdge, newTree, void *extra);
 
 
 /*
